@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
 
 import { Footer } from "@/components/Common/Footer"
 import AppSidebar from "@/components/Sidebar/AppSidebar"
+const logger = console;
 import {
   SidebarInset,
   SidebarProvider,
@@ -21,6 +22,8 @@ export const Route = createFileRoute("/_layout")({
 })
 
 function Layout() {
+logger.debug('>>> Entering Layout()');
+logger.debug('<<< Exiting Layout()');
   return (
     <SidebarProvider>
       <AppSidebar />

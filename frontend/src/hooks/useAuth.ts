@@ -10,16 +10,21 @@ import {
 } from "@/client"
 import { handleError } from "@/utils"
 import useCustomToast from "./useCustomToast"
+const logger = console;
 
 const isLoggedIn = () => {
+logger.debug('>>> Entering isLoggedIn()');
+logger.debug('<<< Exiting isLoggedIn()');
   return localStorage.getItem("access_token") !== null
 }
 
 const useAuth = () => {
+logger.debug('>>> Entering useAuth()');
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { showErrorToast } = useCustomToast()
 
+logger.debug(`useAuth(): queryClient → ${queryClient}`);
   const { data: user } = useQuery<UserPublic | null, Error>({
     queryKey: ["currentUser"],
     queryFn: async () => (await UsersService.readUserMe()).data,
@@ -38,12 +43,15 @@ const useAuth = () => {
     },
   })
 
+logger.debug(`useAuth(): signUpMutation.id → ${signUpMutation?.id}`);
   const login = async (data: AccessToken) => {
+	logger.debug(`>>> Entering login(data=${data})`);
     const response = await LoginService.loginAccessToken({
       body: data,
     })
     localStorage.setItem("access_token", response.data.access_token)
   }
+	logger.debug(`login(data=${data}): response → ${response}`);
 
   const loginMutation = useMutation({
     mutationFn: login,
@@ -53,7 +61,9 @@ const useAuth = () => {
     onError: handleError.bind(showErrorToast),
   })
 
+logger.debug(`useAuth(): loginMutation.id → ${loginMutation?.id}`);
   const logout = () => {
+	logger.debug('>>> Entering logout()');
     localStorage.removeItem("access_token")
     navigate({ to: "/login" })
   }
@@ -64,6 +74,7 @@ const useAuth = () => {
     logout,
     user,
   }
+logger.debug('<<< Exiting useAuth()');
 }
 
 export { isLoggedIn }

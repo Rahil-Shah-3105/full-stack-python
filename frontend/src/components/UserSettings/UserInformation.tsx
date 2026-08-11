@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import useAuth from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { cn } from "@/lib/utils"
 import { handleError } from "@/utils"
 
@@ -29,11 +30,13 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 const UserInformation = () => {
+logger.debug('>>> Entering UserInformation()');
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const [editMode, setEditMode] = useState(false)
   const { user: currentUser } = useAuth()
 
+logger.debug(`UserInformation(): queryClient → ${queryClient}`);
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
@@ -45,6 +48,7 @@ const UserInformation = () => {
   })
 
   const toggleEditMode = () => {
+	logger.debug('>>> Entering toggleEditMode()');
     setEditMode(!editMode)
   }
 
@@ -61,7 +65,9 @@ const UserInformation = () => {
     },
   })
 
+logger.debug(`UserInformation(): mutation.id → ${mutation?.id}`);
   const onSubmit = (data: FormData) => {
+	logger.debug(`>>> Entering onSubmit(data=${data})`);
     const updateData: UserUpdateMe = {}
 
     // only include fields that have changed
@@ -69,13 +75,18 @@ const UserInformation = () => {
       updateData.full_name = data.full_name
     }
     if (data.email !== currentUser?.email) {
+	logger.debug(`UserInformation(): updateData.full_name → ${updateData.full_name}`);
       updateData.email = data.email
+	logger.debug(`onSubmit(data=${data}): updateData.full_name → ${updateData.full_name}`);
     }
 
+	logger.debug(`UserInformation(): updateData.email → ${updateData.email}`);
     mutation.mutate(updateData)
   }
+	logger.debug(`<<< Exiting onSubmit(data=${data})`);
 
   const onCancel = () => {
+	logger.debug('>>> Entering onCancel()');
     form.reset()
     toggleEditMode()
   }

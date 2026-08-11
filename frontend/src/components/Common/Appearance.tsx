@@ -1,3 +1,4 @@
+const logger = console;
 import { Monitor, Moon, Sun } from "lucide-react"
 
 import { type Theme, useTheme } from "@/components/theme-provider"
@@ -23,10 +24,13 @@ const ICON_MAP: Record<Theme, LucideIcon> = {
 }
 
 export const SidebarAppearance = () => {
+logger.debug('>>> Entering SidebarAppearance()');
   const { isMobile } = useSidebar()
   const { setTheme, theme } = useTheme()
   const Icon = ICON_MAP[theme]
 
+logger.debug('>>> Entering Appearance()');
+logger.debug('<<< Exiting Appearance()');
   return (
     <SidebarMenuItem>
       <DropdownMenu modal={false}>

@@ -2,6 +2,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
 import * as React from "react"
+const logger = console;
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -43,11 +44,14 @@ type SidebarContextProps = {
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
 
 function useSidebar() {
+logger.debug('>>> Entering useSidebar()');
   const context = React.useContext(SidebarContext)
   if (!context) {
+	logger.debug(`useSidebar(): context.id → ${context?.id}`);
     throw new Error("useSidebar must be used within a SidebarProvider.")
   }
 
+logger.debug('<<< Exiting useSidebar()');
   return context
 }
 
@@ -68,6 +72,7 @@ function SidebarProvider({
   const [openMobile, setOpenMobile] = React.useState(false)
 
   const getInitialOpen = () => {
+	logger.debug('>>> Entering getInitialOpen()');
     if (typeof document === "undefined") return defaultOpen
 
     const cookie = document.cookie
@@ -76,6 +81,7 @@ function SidebarProvider({
 
     if (!cookie) return defaultOpen
 
+	logger.debug('<<< Exiting getInitialOpen()');
     return cookie.split("=")[1] === "true"
   }
 
@@ -291,8 +297,10 @@ function SidebarTrigger({
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
+logger.debug(`>>> Entering SidebarRail(className=${className},props=${props})`);
   const { toggleSidebar } = useSidebar()
 
+logger.debug(`<<< Exiting SidebarRail(className=${className},props=${props})`);
   return (
     <button
       data-sidebar="rail"
@@ -316,6 +324,8 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
 }
 
 function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
+logger.debug(`>>> Entering SidebarInset(className=${className},props=${props})`);
+logger.debug(`<<< Exiting SidebarInset(className=${className},props=${props})`);
   return (
     <main
       data-slot="sidebar-inset"
@@ -344,6 +354,8 @@ function SidebarInput({
 }
 
 function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
+logger.debug(`>>> Entering SidebarHeader(className=${className},props=${props})`);
+logger.debug(`<<< Exiting SidebarHeader(className=${className},props=${props})`);
   return (
     <div
       data-slot="sidebar-header"
@@ -355,6 +367,8 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
+logger.debug(`>>> Entering SidebarFooter(className=${className},props=${props})`);
+logger.debug(`<<< Exiting SidebarFooter(className=${className},props=${props})`);
   return (
     <div
       data-slot="sidebar-footer"
@@ -380,6 +394,8 @@ function SidebarSeparator({
 }
 
 function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
+logger.debug(`>>> Entering SidebarContent(className=${className},props=${props})`);
+logger.debug(`<<< Exiting SidebarContent(className=${className},props=${props})`);
   return (
     <div
       data-slot="sidebar-content"
@@ -394,6 +410,8 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function SidebarGroup({ className, ...props }: React.ComponentProps<"div">) {
+logger.debug(`>>> Entering SidebarGroup(className=${className},props=${props})`);
+logger.debug(`<<< Exiting SidebarGroup(className=${className},props=${props})`);
   return (
     <div
       data-slot="sidebar-group"
@@ -463,6 +481,8 @@ function SidebarGroupContent({
 }
 
 function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
+logger.debug(`>>> Entering SidebarMenu(className=${className},props=${props})`);
+logger.debug(`<<< Exiting SidebarMenu(className=${className},props=${props})`);
   return (
     <ul
       data-slot="sidebar-menu"
@@ -474,6 +494,8 @@ function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
 }
 
 function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
+logger.debug(`>>> Entering SidebarMenuItem(className=${className},props=${props})`);
+logger.debug(`<<< Exiting SidebarMenuItem(className=${className},props=${props})`);
   return (
     <li
       data-slot="sidebar-menu-item"
@@ -649,6 +671,8 @@ function SidebarMenuSkeleton({
 }
 
 function SidebarMenuSub({ className, ...props }: React.ComponentProps<"ul">) {
+logger.debug(`>>> Entering SidebarMenuSub(className=${className},props=${props})`);
+logger.debug(`<<< Exiting SidebarMenuSub(className=${className},props=${props})`);
   return (
     <ul
       data-slot="sidebar-menu-sub"

@@ -1,4 +1,5 @@
 import * as React from "react"
+const logger = console;
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
@@ -35,6 +36,8 @@ function Alert({
 }
 
 function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
+logger.debug(`>>> Entering AlertTitle(className=${className},props=${props})`);
+logger.debug(`<<< Exiting AlertTitle(className=${className},props=${props})`);
   return (
     <div
       data-slot="alert-title"

@@ -28,6 +28,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { handleError } from "@/utils"
 
 const formSchema = z.object({
@@ -43,10 +44,12 @@ interface EditItemProps {
 }
 
 const EditItem = ({ item, onSuccess }: EditItemProps) => {
+logger.debug(`>>> Entering EditItem(item=${item},onSuccess=${onSuccess})`);
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
 
+logger.debug(`EditItem(item=${item},onSuccess=${onSuccess}): queryClient → ${queryClient}`);
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
@@ -71,10 +74,14 @@ const EditItem = ({ item, onSuccess }: EditItemProps) => {
     },
   })
 
+logger.debug(`EditItem(item=${item},onSuccess=${onSuccess}): mutation.id → ${mutation?.id}`);
   const onSubmit = (data: FormData) => {
+	logger.debug(`>>> Entering onSubmit(data=${data})`);
     mutation.mutate(data)
   }
+	logger.debug(`<<< Exiting onSubmit(data=${data})`);
 
+logger.debug(`<<< Exiting EditItem(item=${item},onSuccess=${onSuccess})`);
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuItem

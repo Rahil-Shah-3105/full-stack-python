@@ -1,5 +1,6 @@
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
+const logger = console;
 import { Slot } from "@radix-ui/react-slot"
 import {
   Controller,
@@ -41,12 +42,15 @@ const FormField = <
 }
 
 const useFormField = () => {
+logger.debug('>>> Entering useFormField()');
   const fieldContext = React.useContext(FormFieldContext)
   const itemContext = React.useContext(FormItemContext)
   const { getFieldState } = useFormContext()
   const formState = useFormState({ name: fieldContext.name })
   const fieldState = getFieldState(fieldContext.name, formState)
 
+logger.debug(`useFormField(): formState → ${formState}`);
+logger.debug(`useFormField(): fieldState → ${fieldState}`);
   if (!fieldContext) {
     throw new Error("useFormField should be used within <FormField>")
   }
@@ -61,6 +65,7 @@ const useFormField = () => {
     formMessageId: `${id}-form-item-message`,
     ...fieldState,
   }
+logger.debug('<<< Exiting useFormField()');
 }
 
 type FormItemContextValue = {
@@ -103,8 +108,10 @@ function FormLabel({
 }
 
 function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
+logger.debug(`>>> Entering FormControl(props=${props})`);
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 
+logger.debug(`<<< Exiting FormControl(props=${props})`);
   return (
     <Slot
       data-slot="form-control"
@@ -121,8 +128,10 @@ function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
 }
 
 function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
+logger.debug(`>>> Entering FormDescription(className=${className},props=${props})`);
   const { formDescriptionId } = useFormField()
 
+logger.debug(`<<< Exiting FormDescription(className=${className},props=${props})`);
   return (
     <p
       data-slot="form-description"
@@ -134,13 +143,16 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 }
 
 function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
+logger.debug(`>>> Entering FormMessage(className=${className},props=${props})`);
   const { error, formMessageId } = useFormField()
   const body = error ? String(error?.message ?? "") : props.children
+logger.debug(`FormMessage(className=${className},props=${props}): body → ${body}`);
 
   if (!body) {
     return null
   }
 
+logger.debug(`<<< Exiting FormMessage(className=${className},props=${props})`);
   return (
     <p
       data-slot="form-message"

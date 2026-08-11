@@ -1,7 +1,9 @@
+const logger = console;
 import { Link } from "@tanstack/react-router"
 import { Button } from "@/components/ui/button"
 
 const ErrorComponent = () => {
+logger.debug('>>> Entering ErrorComponent()');
   return (
     <div
       className="flex min-h-screen items-center justify-center flex-col p-4"
