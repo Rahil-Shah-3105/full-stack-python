@@ -15,6 +15,7 @@ import {
 import { LoadingButton } from "@/components/ui/loading-button"
 import { PasswordInput } from "@/components/ui/password-input"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { handleError } from "@/utils"
 
 const formSchema = z
@@ -39,6 +40,7 @@ const formSchema = z
 type FormData = z.infer<typeof formSchema>
 
 const ChangePassword = () => {
+logger.debug('>>> Entering ChangePassword()');
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -61,9 +63,12 @@ const ChangePassword = () => {
     onError: handleError.bind(showErrorToast),
   })
 
+logger.debug(`ChangePassword(): mutation.id → ${mutation?.id}`);
   const onSubmit = async (data: FormData) => {
+	logger.debug(`>>> Entering onSubmit(data=${data})`);
     mutation.mutate(data)
   }
+	logger.debug(`<<< Exiting onSubmit(data=${data})`);
 
   return (
     <div className="max-w-md">

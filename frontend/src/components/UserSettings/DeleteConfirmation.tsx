@@ -16,14 +16,17 @@ import {
 import { LoadingButton } from "@/components/ui/loading-button"
 import useAuth from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { handleError } from "@/utils"
 
 const DeleteConfirmation = () => {
+logger.debug('>>> Entering DeleteConfirmation()');
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { handleSubmit } = useForm()
   const { logout } = useAuth()
 
+logger.debug(`DeleteConfirmation(): queryClient → ${queryClient}`);
   const mutation = useMutation({
     mutationFn: () => UsersService.deleteUserMe(),
     onSuccess: () => {
@@ -36,7 +39,9 @@ const DeleteConfirmation = () => {
     },
   })
 
+logger.debug(`DeleteConfirmation(): mutation.id → ${mutation?.id}`);
   const onSubmit = async () => {
+	logger.debug('>>> Entering onSubmit()');
     mutation.mutate()
   }
 

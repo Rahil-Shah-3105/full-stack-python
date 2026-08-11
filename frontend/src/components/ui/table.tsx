@@ -1,8 +1,11 @@
 import * as React from "react"
+const logger = console;
 
 import { cn } from "@/lib/utils"
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
+logger.debug(`>>> Entering Table(className=${className},props=${props})`);
+logger.debug(`<<< Exiting Table(className=${className},props=${props})`);
   return (
     <div
       data-slot="table-container"
@@ -18,6 +21,8 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
 }
 
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
+logger.debug(`>>> Entering TableHeader(className=${className},props=${props})`);
+logger.debug(`<<< Exiting TableHeader(className=${className},props=${props})`);
   return (
     <thead
       data-slot="table-header"
@@ -28,6 +33,8 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
 }
 
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
+logger.debug(`>>> Entering TableBody(className=${className},props=${props})`);
+logger.debug(`<<< Exiting TableBody(className=${className},props=${props})`);
   return (
     <tbody
       data-slot="table-body"
@@ -38,6 +45,8 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
 }
 
 function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
+logger.debug(`>>> Entering TableFooter(className=${className},props=${props})`);
+logger.debug(`<<< Exiting TableFooter(className=${className},props=${props})`);
   return (
     <tfoot
       data-slot="table-footer"
@@ -51,6 +60,8 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
 }
 
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
+logger.debug(`>>> Entering TableRow(className=${className},props=${props})`);
+logger.debug(`<<< Exiting TableRow(className=${className},props=${props})`);
   return (
     <tr
       data-slot="table-row"
@@ -64,6 +75,8 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
 }
 
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+logger.debug(`>>> Entering TableHead(className=${className},props=${props})`);
+logger.debug(`<<< Exiting TableHead(className=${className},props=${props})`);
   return (
     <th
       data-slot="table-head"
@@ -77,6 +90,8 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
 }
 
 function TableCell({ className, ...props }: React.ComponentProps<"td">) {
+logger.debug(`>>> Entering TableCell(className=${className},props=${props})`);
+logger.debug(`<<< Exiting TableCell(className=${className},props=${props})`);
   return (
     <td
       data-slot="table-cell"
