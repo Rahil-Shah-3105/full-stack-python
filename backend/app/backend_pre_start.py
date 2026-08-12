@@ -20,6 +20,7 @@ wait_seconds = 1
     after=after_log(logger, logging.WARN),
 )
 def init(db_engine: Engine) -> None:
+    logger.debug(">>> Entering init(db_engine=%s)", db_engine)
     try:
         with Session(db_engine) as session:
             # Try to create session to check if DB is awake
@@ -27,13 +28,16 @@ def init(db_engine: Engine) -> None:
     except Exception as e:
         logger.error(e)
         raise e
+        logger.debug("<<< Exiting init(db_engine=%s)", db_engine)
 
 
 def main() -> None:
+    logger.debug(">>> Entering main()")
     logger.info("Initializing service")
     init(engine)
     logger.info("Service finished initializing")
 
+    logger.debug("<<< Exiting main()")
 
 if __name__ == "__main__":
     main()

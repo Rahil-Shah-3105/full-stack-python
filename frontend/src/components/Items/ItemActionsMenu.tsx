@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import DeleteItem from "../Items/DeleteItem"
 import EditItem from "../Items/EditItem"
+const logger = console;
 
 interface ItemActionsMenuProps {
   item: ItemPublic

@@ -29,6 +29,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { handleError } from "@/utils"
 
 const formSchema = z
@@ -53,10 +54,12 @@ const formSchema = z
 type FormData = z.infer<typeof formSchema>
 
 const AddUser = () => {
+logger.debug('>>> Entering AddUser()');
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
 
+logger.debug(`AddUser(): queryClient → ${queryClient}`);
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
@@ -84,9 +87,12 @@ const AddUser = () => {
     },
   })
 
+logger.debug(`AddUser(): mutation.id → ${mutation?.id}`);
   const onSubmit = (data: FormData) => {
+	logger.debug(`>>> Entering onSubmit(data=${data})`);
     mutation.mutate(data)
   }
+	logger.debug(`<<< Exiting onSubmit(data=${data})`);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

@@ -9,15 +9,20 @@ logger = logging.getLogger(__name__)
 
 
 def init() -> None:
+    logger.debug(">>> Entering init()")
     with Session(engine) as session:
         init_db(session)
 
+        logger.debug("<<< Exiting init()")
+        logger.error("Exception in init(): %s", str(e), exc_info=True)
 
 def main() -> None:
+    logger.debug(">>> Entering main()")
     logger.info("Creating initial data")
     init()
     logger.info("Initial data created")
 
+    logger.debug("<<< Exiting main()")
 
 if __name__ == "__main__":
     main()

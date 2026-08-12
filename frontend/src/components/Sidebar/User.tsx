@@ -17,6 +17,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import useAuth from "@/hooks/useAuth"
+const logger = console;
 import { getInitials } from "@/utils"
 
 interface UserInfoProps {
@@ -25,6 +26,8 @@ interface UserInfoProps {
 }
 
 function UserInfo({ fullName, email }: UserInfoProps) {
+logger.debug(`>>> Entering UserInfo(fullName=${fullName},email=${email})`);
+logger.debug(`<<< Exiting UserInfo(fullName=${fullName},email=${email})`);
   return (
     <div className="flex items-center gap-2.5 w-full min-w-0">
       <Avatar className="size-8">
@@ -41,20 +44,24 @@ function UserInfo({ fullName, email }: UserInfoProps) {
 }
 
 export function User({ user }: { user: any }) {
+logger.debug(`>>> Entering User(user=${user})`);
   const { logout } = useAuth()
   const { isMobile, setOpenMobile } = useSidebar()
 
   if (!user) return null
 
   const handleMenuClick = () => {
+	logger.debug('>>> Entering handleMenuClick()');
     if (isMobile) {
       setOpenMobile(false)
     }
   }
   const handleLogout = async () => {
+	logger.debug('>>> Entering handleLogout()');
     logout()
   }
 
+logger.debug(`<<< Exiting User(user=${user})`);
   return (
     <SidebarMenu>
       <SidebarMenuItem>

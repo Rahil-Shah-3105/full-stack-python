@@ -11,6 +11,7 @@ import {
 import useAuth from "@/hooks/useAuth"
 import DeleteUser from "./DeleteUser"
 import EditUser from "./EditUser"
+const logger = console;
 
 interface UserActionsMenuProps {
   user: UserPublic
