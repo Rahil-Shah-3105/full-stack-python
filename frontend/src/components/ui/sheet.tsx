@@ -2,11 +2,14 @@
 
 import * as React from "react"
 import * as SheetPrimitive from "@radix-ui/react-dialog"
+const logger = console;
 import { XIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
+logger.debug(`>>> Entering Sheet(props=${props})`);
+logger.debug(`<<< Exiting Sheet(props=${props})`);
   return <SheetPrimitive.Root data-slot="sheet" {...props} />
 }
 

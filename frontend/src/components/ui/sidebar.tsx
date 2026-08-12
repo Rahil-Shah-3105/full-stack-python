@@ -2,6 +2,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
 import * as React from "react"
+const logger = console;
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -43,11 +44,14 @@ type SidebarContextProps = {
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
 
 function useSidebar() {
+logger.debug('>>> Entering useSidebar()');
   const context = React.useContext(SidebarContext)
   if (!context) {
+	logger.debug(`useSidebar(): context.id → ${context?.id}`);
     throw new Error("useSidebar must be used within a SidebarProvider.")
   }
 
+logger.debug('<<< Exiting useSidebar()');
   return context
 }
 
@@ -68,6 +72,7 @@ function SidebarProvider({
   const [openMobile, setOpenMobile] = React.useState(false)
 
   const getInitialOpen = () => {
+	logger.debug('>>> Entering getInitialOpen()');
     if (typeof document === "undefined") return defaultOpen
 
     const cookie = document.cookie
@@ -76,6 +81,7 @@ function SidebarProvider({
 
     if (!cookie) return defaultOpen
 
+	logger.debug('<<< Exiting getInitialOpen()');
     return cookie.split("=")[1] === "true"
   }
 

@@ -9,12 +9,14 @@ import {
 } from '../core/pathSerializer.gen';
 import { getUrl } from '../core/utils.gen';
 import type { Client, ClientOptions, Config, RequestOptions } from './types.gen';
+const logger = console;
 
 export const createQuerySerializer = <T = unknown>({
   parameters = {},
   ...args
 }: QuerySerializerOptions = {}) => {
   const querySerializer = (queryParams: T) => {
+	logger.debug(`>>> Entering querySerializer(queryParams=${queryParams})`);
     const search: string[] = [];
     if (queryParams && typeof queryParams === 'object') {
       for (const name in queryParams) {
@@ -56,6 +58,7 @@ export const createQuerySerializer = <T = unknown>({
         }
       }
     }
+	logger.debug(`<<< Exiting querySerializer(queryParams=${queryParams})`);
     return search.join('&');
   };
   return querySerializer;
@@ -125,6 +128,7 @@ export async function setAuthParams(
 }
 
 export const buildUrl: Client['buildUrl'] = (options) => {
+logger.debug(`>>> Entering buildUrl(options=${options})`);
   const instanceBaseUrl = options.axios?.defaults?.baseURL;
 
   const baseUrl =
@@ -144,8 +148,11 @@ export const buildUrl: Client['buildUrl'] = (options) => {
 };
 
 export const mergeConfigs = (a: Config, b: Config): Config => {
+logger.debug(`>>> Entering mergeConfigs(a=${a},b=${b})`);
   const config = { ...a, ...b };
   config.headers = mergeHeaders(a.headers, b.headers);
+logger.debug(`mergeConfigs(a=${a},b=${b}): config → ${config}`);
+logger.debug(`<<< Exiting mergeConfigs(a=${a},b=${b})`);
   return config;
 };
 
