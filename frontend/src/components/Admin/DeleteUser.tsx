@@ -17,6 +17,7 @@ import {
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { LoadingButton } from "@/components/ui/loading-button"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { handleError } from "@/utils"
 
 interface DeleteUserProps {
@@ -25,13 +26,17 @@ interface DeleteUserProps {
 }
 
 const DeleteUser = ({ id, onSuccess }: DeleteUserProps) => {
+logger.debug(`>>> Entering DeleteUser(id=${id},onSuccess=${onSuccess})`);
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { handleSubmit } = useForm()
 
+logger.debug(`DeleteUser(id=${id},onSuccess=${onSuccess}): queryClient → ${queryClient}`);
   const deleteUser = async (id: string) => {
+	logger.debug(`>>> Entering deleteUser(id=${id})`);
     await UsersService.deleteUser({ path: { user_id: id } })
+	logger.debug(`<<< Exiting DeleteUser(id=${id},onSuccess=${onSuccess})`);
   }
 
   const mutation = useMutation({
@@ -47,10 +52,14 @@ const DeleteUser = ({ id, onSuccess }: DeleteUserProps) => {
     },
   })
 
+logger.debug(`DeleteUser(id=${id},onSuccess=${onSuccess}): mutation.id → ${mutation?.id}`);
   const onSubmit = async () => {
+	logger.debug('>>> Entering onSubmit()');
     mutation.mutate(id)
   }
 
+logger.debug(`<<< Exiting deleteUser(id=${id})`);
+logger.debug(`<<< Exiting DeleteUser(id=${id},onSuccess=${onSuccess})`);
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuItem

@@ -1,9 +1,12 @@
+const logger = console;
 import { AxiosError } from "axios"
 
 function extractErrorMessage(err: Error): string {
   if (err instanceof AxiosError) {
+	logger.debug(`>>> Entering extractErrorMessage(err=${err})`);
     const errDetail = (err.response?.data as any)?.detail
     if (Array.isArray(errDetail) && errDetail.length > 0) {
+	logger.debug(`extractErrorMessage(err=${err}): errDetail → ${errDetail}`);
       return errDetail[0].msg
     }
     if (typeof errDetail === "string") {
@@ -11,6 +14,7 @@ function extractErrorMessage(err: Error): string {
     }
     return err.message
   }
+logger.debug(`<<< Exiting extractErrorMessage(err=${err})`);
   return "Something went wrong."
 }
 
@@ -20,10 +24,12 @@ export const handleError = function (this: (msg: string) => void, err: Error) {
 }
 
 export const getInitials = (name: string): string => {
+logger.debug(`>>> Entering getInitials(name=${name})`);
   return name
     .split(" ")
     .slice(0, 2)
     .map((word) => word[0])
     .join("")
     .toUpperCase()
+	logger.debug(`<<< Exiting getInitials(name=${name})`);
 }

@@ -25,6 +25,8 @@ from app.models import (
     UserUpdateMe,
 )
 from app.utils import generate_new_account_email, send_email
+import logging
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -35,19 +37,26 @@ router = APIRouter(prefix="/users", tags=["users"])
     response_model=UsersPublic,
 )
 def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
+    logger.debug(">>> Entering read_users(session=%s,skip=%s,limit=%s)", session, skip, limit)
     """
     Retrieve users.
     """
+    logger.debug("read_users(session=%s,skip=%s,limit=%s): count → %s", session, skip, limit, count)
+    logger.debug("read_users(session=%s,skip=%s,limit=%s): statement → %s", session, skip, limit, statement)
 
     count_statement = select(func.count()).select_from(User)
+    logger.debug("read_users(session=%s,skip=%s,limit=%s): count_statement → %s", session, skip, limit, count_statement)
     count = session.exec(count_statement).one()
 
     statement = (
         select(User).order_by(col(User.created_at).desc()).offset(skip).limit(limit)
     )
+    logger.debug("read_users(session=%s,skip=%s,limit=%s): users_public → %s", session, skip, limit, users_public)
     users = session.exec(statement).all()
+    logger.debug("read_users(session=%s,skip=%s,limit=%s): users → %s", session, skip, limit, users)
 
     users_public = [UserPublic.model_validate(user) for user in users]
+    logger.debug("<<< Exiting read_users(session=%s,skip=%s,limit=%s)", session, skip, limit)
     return UsersPublic(data=users_public, count=count)
 
 
@@ -55,26 +64,35 @@ def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     "/", dependencies=[Depends(get_current_active_superuser)], response_model=UserPublic
 )
 def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
+    logger.debug(">>> Entering create_user(session=%s,user_in=%s)", session, user_in)
+    logger.debug("create_user(session=%s,user_in=%s): detail → %s", session, user_in, detail)
+    logger.debug("create_user(session=%s,user_in=%s): status_code → %s", session, user_in, status_code)
     """
     Create new user.
     """
     user = crud.get_user_by_email(session=session, email=user_in.email)
+    logger.debug("create_user(session=%s,user_in=%s): user → %s", session, user_in, user)
     if user:
         raise HTTPException(
             status_code=400,
             detail="The user with this email already exists in the system.",
         )
+        logger.debug("create_user(session=%s,user_in=%s): email_data → %s", session, user_in, email_data)
 
     user = crud.create_user(session=session, user_create=user_in)
     if settings.emails_enabled and user_in.email:
         email_data = generate_new_account_email(
             email_to=user_in.email, username=user_in.email, password=user_in.password
         )
+        logger.debug("create_user(session=%s,user_in=%s): email_to → %s", session, user_in, email_to)
         send_email(
             email_to=user_in.email,
             subject=email_data.subject,
             html_content=email_data.html_content,
         )
+        logger.debug("create_user(session=%s,user_in=%s): subject → %s", session, user_in, subject)
+        logger.debug("create_user(session=%s,user_in=%s): html_content → %s", session, user_in, html_content)
+    logger.debug("<<< Exiting create_user(session=%s,user_in=%s)", session, user_in)
     return user
 
 
@@ -123,32 +141,45 @@ def update_password_me(
 
 @router.get("/me", response_model=UserPublic)
 def read_user_me(current_user: CurrentUser) -> Any:
+    logger.debug(">>> Entering read_user_me(current_user=%s)", current_user)
     """
     Get current user.
     """
+    logger.debug("<<< Exiting read_user_me(current_user=%s)", current_user)
     return current_user
 
 
 @router.delete("/me", response_model=Message)
 def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
+    logger.debug(">>> Entering delete_user_me(session=%s,current_user=%s)", session, current_user)
     """
     Delete own user.
+    logger.debug("delete_user_me(session=%s,current_user=%s): status_code → %s", session, current_user, status_code)
+    import time; __log_start = time.time()
     """
     if current_user.is_superuser:
         raise HTTPException(
             status_code=403, detail="Super users are not allowed to delete themselves"
         )
+        import time; __log_start = time.time()
+        logger.info("delete_user_me(session,current_user)=%s,%s: delete operation took %s ms", session, current_user, int((time.time() - __log_start) * 1000))
+        logger.info("delete_user_me(session,current_user)=%s,%s: database operation took %s ms", session, current_user, int((time.time() - __log_start) * 1000))
     session.delete(current_user)
     session.commit()
+    logger.debug("<<< Exiting delete_user_me(session=%s,current_user=%s)", session, current_user)
     return Message(message="User deleted successfully")
 
 
 @router.post("/signup", response_model=UserPublic)
 def register_user(session: SessionDep, user_in: UserRegister) -> Any:
+    logger.debug(">>> Entering register_user(session=%s,user_in=%s)", session, user_in)
+    logger.debug("register_user(session=%s,user_in=%s): detail → %s", session, user_in, detail)
+    logger.debug("register_user(session=%s,user_in=%s): status_code → %s", session, user_in, status_code)
     """
     Create new user without the need to be logged in.
     """
     user = crud.get_user_by_email(session=session, email=user_in.email)
+    logger.debug("register_user(session=%s,user_in=%s): user → %s", session, user_in, user)
     if user:
         raise HTTPException(
             status_code=400,
@@ -156,6 +187,7 @@ def register_user(session: SessionDep, user_in: UserRegister) -> Any:
         )
     user_create = UserCreate.model_validate(user_in)
     user = crud.create_user(session=session, user_create=user_create)
+    logger.debug("<<< Exiting register_user(session=%s,user_in=%s)", session, user_in)
     return user
 
 
@@ -190,6 +222,7 @@ def update_user(
     user_id: uuid.UUID,
     user_in: UserUpdate,
 ) -> Any:
+    logger.debug("<<< Exiting update_user(session=%s,user_id=%s,user_in=%s)", session, user_id, user_in)
     """
     Update a user.
     """

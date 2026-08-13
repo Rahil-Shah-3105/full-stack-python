@@ -6,6 +6,8 @@ from sqlmodel import col, func, select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.models import Item, ItemCreate, ItemPublic, ItemsPublic, ItemUpdate, Message
+import logging
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/items", tags=["items"])
 
@@ -47,14 +49,17 @@ def read_items(
 
 @router.get("/{id}", response_model=ItemPublic)
 def read_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Any:
+    logger.debug(">>> Entering read_item(session=%s,current_user=%s,id=%s)", session, current_user, id)
     """
     Get item by ID.
     """
     item = session.get(Item, id)
+    logger.debug("read_item(session=%s,current_user=%s,id=%s): item → %s", session, current_user, id, item)
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
     if not current_user.is_superuser and (item.owner_id != current_user.id):
         raise HTTPException(status_code=403, detail="Not enough permissions")
+    logger.debug("<<< Exiting read_item(session=%s,current_user=%s,id=%s)", session, current_user, id)
     return item
 
 
@@ -80,6 +85,7 @@ def update_item(
     id: uuid.UUID,
     item_in: ItemUpdate,
 ) -> Any:
+    logger.debug("<<< Exiting update_item(session=%s,current_user=%s,id=%s,item_in=%s)", session, current_user, id, item_in)
     """
     Update an item.
     """

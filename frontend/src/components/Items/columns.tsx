@@ -2,15 +2,18 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { Check, Copy } from "lucide-react"
 
 import type { ItemPublic } from "@/client"
+const logger = console;
 import { Button } from "@/components/ui/button"
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard"
 import { cn } from "@/lib/utils"
 import { ItemActionsMenu } from "./ItemActionsMenu"
 
 function CopyId({ id }: { id: string }) {
+logger.debug(`>>> Entering CopyId(id=${id})`);
   const [copiedText, copy] = useCopyToClipboard()
   const isCopied = copiedText === id
 
+logger.debug(`<<< Exiting CopyId(id=${id})`);
   return (
     <div className="flex items-center gap-1.5 group">
       <span className="font-mono text-xs text-muted-foreground">{id}</span>

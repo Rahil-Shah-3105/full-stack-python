@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import { PasswordInput } from "@/components/ui/password-input"
 import useAuth, { isLoggedIn } from "@/hooks/useAuth"
+const logger = console;
 
 const formSchema = z
   .object({
@@ -58,6 +59,7 @@ export const Route = createFileRoute("/signup")({
 })
 
 function SignUp() {
+logger.debug('>>> Entering SignUp()');
   const { signUpMutation } = useAuth()
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -72,13 +74,16 @@ function SignUp() {
   })
 
   const onSubmit = (data: FormData) => {
+	logger.debug(`>>> Entering onSubmit(data=${data})`);
     if (signUpMutation.isPending) return
 
     // exclude confirm_password from submission data
     const { confirm_password: _confirm_password, ...submitData } = data
     signUpMutation.mutate(submitData)
   }
+	logger.debug(`<<< Exiting onSubmit(data=${data})`);
 
+logger.debug('<<< Exiting SignUp()');
   return (
     <AuthLayout>
       <Form {...form}>

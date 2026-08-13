@@ -1,3 +1,4 @@
+const logger = console;
 "use client"
 
 import {
@@ -11,8 +12,11 @@ import { useTheme } from "next-themes"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 
 const Toaster = ({ ...props }: ToasterProps) => {
+logger.debug(`>>> Entering Toaster(props=${props})`);
   const { theme = "system" } = useTheme()
 
+logger.debug(`Toaster(props=${props}): theme → ${theme}`);
+logger.debug(`<<< Exiting Toaster(props=${props})`);
   return (
     <Sonner
       theme={theme as ToasterProps["theme"]}

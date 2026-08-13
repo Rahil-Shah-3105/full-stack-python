@@ -1,4 +1,5 @@
 import * as React from "react"
+const logger = console;
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
