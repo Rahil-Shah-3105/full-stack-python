@@ -7,6 +7,8 @@ from pwdlib.hashers.argon2 import Argon2Hasher
 from pwdlib.hashers.bcrypt import BcryptHasher
 
 from app.core.config import settings
+import logging
+logger = logging.getLogger(__name__)
 
 password_hash = PasswordHash(
     (
@@ -20,9 +22,14 @@ ALGORITHM = "HS256"
 
 
 def create_access_token(subject: str | Any, expires_delta: timedelta) -> str:
+    logger.debug(">>> Entering create_access_token(subject=%s,expires_delta=%s)", subject, expires_delta)
+    logger.debug("create_access_token(subject=%s,expires_delta=%s): to_encode → %s", subject, expires_delta, to_encode)
+    logger.debug("create_access_token(subject=%s,expires_delta=%s): encoded_jwt → %s", subject, expires_delta, encoded_jwt)
     expire = datetime.now(UTC) + expires_delta
+    logger.debug("create_access_token(subject=%s,expires_delta=%s): expire → %s", subject, expires_delta, expire)
     to_encode = {"exp": expire, "sub": str(subject)}
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
+    logger.debug("<<< Exiting create_access_token(subject=%s,expires_delta=%s)", subject, expires_delta)
     return encoded_jwt
 
 

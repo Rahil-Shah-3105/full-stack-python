@@ -21,6 +21,8 @@ fileConfig(config.config_file_name)
 
 from app.models import SQLModel  # noqa
 from app.core.config import settings # noqa
+import logging
+logger = logging.getLogger(__name__)
 
 target_metadata = SQLModel.metadata
 
@@ -31,10 +33,13 @@ target_metadata = SQLModel.metadata
 
 
 def get_url():
+    logger.debug(">>> Entering get_url()")
+    logger.debug("<<< Exiting get_url()")
     return str(settings.SQLALCHEMY_DATABASE_URI)
 
 
 def run_migrations_offline():
+    logger.debug(">>> Entering run_migrations_offline()")
     """Run migrations in 'offline' mode.
 
     This configures the context with just a URL
@@ -47,19 +52,28 @@ def run_migrations_offline():
 
     """
     url = get_url()
+    logger.info("run_migrations_offline(): url → %s", url)
     context.configure(
         url=url, target_metadata=target_metadata, literal_binds=True, compare_type=True
     )
 
     with context.begin_transaction():
+        logger.error("Exception in run_migrations_offline()", exc_info=True)
         context.run_migrations()
+        logger.debug("<<< Exiting run_migrations_offline()")
 
 
 def run_migrations_online():
+    logger.debug(">>> Entering run_migrations_online()")
     """Run migrations in 'online' mode.
 
     In this scenario we need to create an Engine
     and associate a connection with the context.
+    logger.debug("run_migrations_online(): poolclass → %s", poolclass)
+    logger.debug("run_migrations_online(): prefix → %s", prefix)
+    logger.debug("run_migrations_online(): configuration → %s", configuration)
+    logger.info("run_migrations_online(): configuration → %s", configuration)
+    logger.debug("run_migrations_online(): connectable → %s", connectable)
 
     """
     configuration = config.get_section(config.config_ini_section)
@@ -71,13 +85,17 @@ def run_migrations_online():
         poolclass=pool.NullPool,
     )
 
+    logger.debug("run_migrations_online(): connection → %s", connection)
     with connectable.connect() as connection:
+        logger.error("Exception in run_migrations_online()", exc_info=True)
         context.configure(
             connection=connection, target_metadata=target_metadata, compare_type=True
         )
 
         with context.begin_transaction():
+            logger.error("Exception in run_migrations_online()", exc_info=True)
             context.run_migrations()
+            logger.debug("<<< Exiting run_migrations_online()")
 
 
 if context.is_offline_mode():

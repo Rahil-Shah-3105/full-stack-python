@@ -8,13 +8,16 @@ import { columns, type UserTableData } from "@/components/Admin/columns"
 import { DataTable } from "@/components/Common/DataTable"
 import PendingUsers from "@/components/Pending/PendingUsers"
 import useAuth from "@/hooks/useAuth"
+const logger = console;
 
 function getUsersQueryOptions() {
+logger.debug('>>> Entering getUsersQueryOptions()');
   return {
     queryFn: async () =>
       (await UsersService.readUsers({ query: { skip: 0, limit: 100 } })).data,
     queryKey: ["users"],
   }
+logger.debug('<<< Exiting getUsersQueryOptions()');
 }
 
 export const Route = createFileRoute("/_layout/admin")({
@@ -37,6 +40,7 @@ export const Route = createFileRoute("/_layout/admin")({
 })
 
 function UsersTableContent() {
+logger.debug('>>> Entering UsersTableContent()');
   const { user: currentUser } = useAuth()
   const { data: users } = useSuspenseQuery(getUsersQueryOptions())
 
@@ -45,10 +49,13 @@ function UsersTableContent() {
     isCurrentUser: currentUser?.id === user.id,
   }))
 
+logger.debug('<<< Exiting UsersTableContent()');
   return <DataTable columns={columns} data={tableData} />
 }
 
 function UsersTable() {
+logger.debug('>>> Entering UsersTable()');
+logger.debug('<<< Exiting UsersTable()');
   return (
     <Suspense fallback={<PendingUsers />}>
       <UsersTableContent />
@@ -57,6 +64,8 @@ function UsersTable() {
 }
 
 function Admin() {
+logger.debug('>>> Entering Admin()');
+logger.debug('<<< Exiting Admin()');
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">

@@ -7,11 +7,15 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
 from app.core.config import settings
+import logging
+logger = logging.getLogger(__name__)
 
 FRONTEND_DIR = Path(__file__).parent / "frontend"
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
+    logger.debug(">>> Entering custom_generate_unique_id(route=%s)", route)
+    logger.debug("<<< Exiting custom_generate_unique_id(route=%s)", route)
     return f"{route.tags[0]}-{route.name}"
 
 

@@ -3,18 +3,26 @@
 import re
 import sys
 from datetime import date
+import logging
+logger = logging.getLogger(__name__)
 
 RELEASE_NOTES_FILE = "release-notes.md"
 RELEASE_HEADER_PATTERN = re.compile(r"^## (\d+\.\d+\.\d+)\s*(\(.*\))?\s*$")
 
 
 def main() -> None:
+    logger.debug(">>> Entering main()")
+    logger.debug("main(): lines → %s", lines)
+    logger.debug("main(): match → %s", match)
     with open(RELEASE_NOTES_FILE) as f:
+        logger.error("Exception in main()", exc_info=True)
         lines = f.readlines()
 
     for i, line in enumerate(lines):
         match = RELEASE_HEADER_PATTERN.match(line)
         if not match:
+            logger.debug("main(): date_part → %s", date_part)
+            logger.debug("main(): version → %s", version)
             continue
 
         version = match.group(1)
@@ -34,6 +42,7 @@ def main() -> None:
 
     print("No release header found")
     sys.exit(1)
+    logger.debug("<<< Exiting main()")
 
 
 if __name__ == "__main__":

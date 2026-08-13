@@ -7,11 +7,14 @@ import { createSseClient } from '../core/serverSentEvents.gen';
 import type { HttpMethod } from '../core/types.gen';
 import { getValidRequestBody } from '../core/utils.gen';
 import type { Client, Config, RequestOptions } from './types.gen';
+const logger = console;
 import { buildUrl, createConfig, mergeConfigs, mergeHeaders, setAuthParams } from './utils.gen';
 
 export const createClient = (config: Config = {}): Client => {
+logger.debug(`>>> Entering createClient(config=${config})`);
   let _config = mergeConfigs(createConfig(), config);
 
+logger.debug(`createClient(config=${config}): _config → ${_config}`);
   let instance: AxiosInstance;
 
   if (_config.axios && !('Axios' in _config.axios)) {
@@ -25,6 +28,7 @@ export const createClient = (config: Config = {}): Client => {
   const getConfig = (): Config => ({ ..._config });
 
   const setConfig = (config: Config): Config => {
+	logger.debug(`>>> Entering setConfig(config=${config})`);
     _config = mergeConfigs(_config, config);
     instance.defaults = {
       ...instance.defaults,
@@ -32,6 +36,9 @@ export const createClient = (config: Config = {}): Client => {
       // @ts-expect-error
       headers: mergeHeaders(instance.defaults.headers, _config.headers),
     };
+	logger.debug(`setConfig(config=${config}): _config → ${_config}`);
+	logger.debug(`setConfig(config=${config}): instance.defaults → ${instance.defaults}`);
+	logger.debug(`<<< Exiting setConfig(config=${config})`);
     return getConfig();
   };
 
@@ -42,6 +49,7 @@ export const createClient = (config: Config = {}): Client => {
   >(
     options: RequestOptions<TData, ThrowOnError, Url>,
   ) => {
+	logger.debug(`createClient(config=${config}): instance.defaults → ${instance.defaults}`);
     const opts = {
       ..._config,
       ...options,
@@ -68,6 +76,7 @@ export const createClient = (config: Config = {}): Client => {
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
+	logger.debug(`>>> Entering request(options=${options})`);
     const { opts, url } = await beforeRequest(options);
     try {
       // assign Axios here for consistency with fetch
@@ -84,6 +93,7 @@ export const createClient = (config: Config = {}): Client => {
         url,
       });
 
+	logger.debug(`request(options=${options}): response → ${response}`);
       let { data } = response;
 
       if (opts.responseType === 'json') {
@@ -101,20 +111,25 @@ export const createClient = (config: Config = {}): Client => {
         data: data ?? {},
       };
     } catch (error) {
+	logger.error(`Exception in createClient(config=${config}): ${(error as Error).message}`, error);
       const e = error as AxiosError;
+	logger.error(`Exception in request(options=${options}): ${(error as Error).message}`, error);
       if (opts.throwOnError) {
         throw e;
       }
       // @ts-expect-error
       e.error = e.response?.data ?? {};
+	logger.debug(`createClient(config=${config}): e.error → ${e.error}`);
       return e;
     }
+	logger.debug(`<<< Exiting request(options=${options})`);
   };
 
   const makeMethodFn = (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
     request({ ...options, method });
 
   const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
+	logger.debug(`>>> Entering makeSseFn(method=${method})`);
     const { opts, url } = await beforeRequest(options);
     return createSseClient({
       ...opts,
@@ -131,6 +146,7 @@ export const createClient = (config: Config = {}): Client => {
   const _buildUrl: Client['buildUrl'] = (options) =>
     buildUrl({ axios: instance, ..._config, ...options });
 
+logger.debug(`<<< Exiting createClient(config=${config})`);
   return {
     buildUrl: _buildUrl,
     connect: makeMethodFn('CONNECT'),

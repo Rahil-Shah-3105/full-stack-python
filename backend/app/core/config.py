@@ -9,6 +9,8 @@ from pydantic import (
     model_validator,
 )
 from pydantic_settings import BaseSettings, SettingsConfigDict
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Settings(BaseSettings):
@@ -36,6 +38,7 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
+        logger.debug(">>> Entering SQLALCHEMY_DATABASE_URI()")
         return PostgresDsn.build(
             scheme="postgresql+psycopg",
             username=self.POSTGRES_USER,
@@ -44,6 +47,8 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
         )
+        logger.debug("<<< Exiting SQLALCHEMY_DATABASE_URI()")
+        logger.debug("SQLALCHEMY_DATABASE_URI(self=%s): scheme → %s", self, scheme)
 
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
@@ -56,8 +61,11 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _set_default_emails_from(self) -> Self:
+        logger.debug(">>> Entering _set_default_emails_from()")
         if not self.EMAILS_FROM_NAME:
             self.EMAILS_FROM_NAME = self.PROJECT_NAME
+            logger.debug("_set_default_emails_from(self=%s): self.EMAILS_FROM_NAME → %s", self, self.EMAILS_FROM_NAME)
+        logger.debug("<<< Exiting _set_default_emails_from()")
         return self
 
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
@@ -65,6 +73,8 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def emails_enabled(self) -> bool:
+        logger.debug(">>> Entering emails_enabled()")
+        logger.debug("<<< Exiting emails_enabled()")
         return bool(self.SMTP_HOST and self.EMAILS_FROM_EMAIL)
 
     EMAIL_TEST_USER: EmailStr = "test@example.com"
@@ -72,6 +82,8 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER_PASSWORD: str
 
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
+        logger.debug(">>> Entering _check_default_secret(var_name=%s,value=%s)", var_name, value)
+        logger.debug("_check_default_secret(self=%s,var_name=%s,value=%s): message → %s", self, var_name, value, message)
         if value == "changethis":
             message = (
                 f'The value of {var_name} is "changethis", '
@@ -80,16 +92,19 @@ class Settings(BaseSettings):
             if self.FASTAPI_ENV == "development":
                 warnings.warn(message, stacklevel=1)
             else:
+                logger.debug("<<< Exiting _check_default_secret(var_name=%s,value=%s)", var_name, value)
                 raise ValueError(message)
 
     @model_validator(mode="after")
     def _enforce_non_default_secrets(self) -> Self:
+        logger.debug(">>> Entering _enforce_non_default_secrets()")
         self._check_default_secret("SECRET_KEY", self.SECRET_KEY)
         self._check_default_secret("POSTGRES_PASSWORD", self.POSTGRES_PASSWORD)
         self._check_default_secret(
             "FIRST_SUPERUSER_PASSWORD", self.FIRST_SUPERUSER_PASSWORD
         )
 
+        logger.debug("<<< Exiting _enforce_non_default_secrets()")
         return self
 
 
