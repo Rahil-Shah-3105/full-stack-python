@@ -23,10 +23,14 @@ class EmailData:
 
 
 def render_email_template(*, template_name: str, context: dict[str, Any]) -> str:
+    logger.debug(">>> Entering render_email_template(template_name=%s,context=%s)", template_name, context)
     template_str = (
         Path(__file__).parent / "email-templates" / template_name
     ).read_text()
+    logger.debug("render_email_template(template_name=%s,context=%s): template_str → %s", template_name, context, template_str)
     html_content = Template(template_str).render(context)
+    logger.debug("render_email_template(template_name=%s,context=%s): html_content → %s", template_name, context, html_content)
+    logger.debug("<<< Exiting render_email_template(template_name=%s,context=%s)", template_name, context)
     return html_content
 
 
@@ -57,18 +61,27 @@ def send_email(
 
 
 def generate_test_email(email_to: str) -> EmailData:
+    logger.debug(">>> Entering generate_test_email(email_to=%s)", email_to)
     project_name = settings.PROJECT_NAME
+    logger.debug("generate_test_email(email_to=%s): project_name → %s", email_to, project_name)
     subject = f"{project_name} - Test email"
+    logger.debug("generate_test_email(email_to=%s): subject → %s", email_to, subject)
     html_content = render_email_template(
         template_name="test_email.html",
         context={"project_name": settings.PROJECT_NAME, "email": email_to},
     )
+    logger.debug("generate_test_email(email_to=%s): template_name → %s", email_to, template_name)
+    logger.debug("generate_test_email(email_to=%s): html_content → %s", email_to, html_content)
+    logger.debug("<<< Exiting generate_test_email(email_to=%s)", email_to)
     return EmailData(html_content=html_content, subject=subject)
 
 
 def generate_reset_password_email(email_to: str, email: str, token: str) -> EmailData:
+    logger.debug(">>> Entering generate_reset_password_email(email_to=%s,email=%s,token=<redacted>)", email_to, email)
     project_name = settings.PROJECT_NAME
+    logger.debug("generate_reset_password_email(email_to=%s,email=%s,token=<redacted>): project_name → %s", email_to, email, project_name)
     subject = f"{project_name} - Password recovery for user {email}"
+    logger.debug("generate_reset_password_email(email_to=%s,email=%s,token=<redacted>): subject → %s", email_to, email, subject)
     link = f"{settings.FRONTEND_HOST}/reset-password?token={token}"
     html_content = render_email_template(
         template_name="reset_password.html",
@@ -80,6 +93,10 @@ def generate_reset_password_email(email_to: str, email: str, token: str) -> Emai
             "link": link,
         },
     )
+    logger.debug("generate_reset_password_email(email_to=%s,email=%s,token=<redacted>): html_content → %s", email_to, email, html_content)
+    logger.debug("generate_reset_password_email(email_to=%s,email=%s,token=<redacted>): template_name → %s", email_to, email, template_name)
+    logger.debug("generate_reset_password_email(email_to=%s,email=%s,token=<redacted>): link → %s", email_to, email, link)
+    logger.debug("<<< Exiting generate_reset_password_email(email_to=%s,email=%s,token=<redacted>)", email_to, email)
     return EmailData(html_content=html_content, subject=subject)
 
 
@@ -98,27 +115,38 @@ def generate_new_account_email(
             "link": settings.FRONTEND_HOST,
         },
     )
+    logger.debug("generate_password_reset_token(email=%s): encoded_jwt → %s", email, encoded_jwt)
+    logger.debug("generate_password_reset_token(email=%s): expires → %s", email, expires)
+    logger.debug("generate_password_reset_token(email=%s): exp → %s", email, exp)
     return EmailData(html_content=html_content, subject=subject)
 
 
 def generate_password_reset_token(email: str) -> str:
+    logger.debug(">>> Entering generate_password_reset_token(email=%s)", email)
     delta = timedelta(hours=settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS)
+    logger.debug("generate_password_reset_token(email=%s): delta → %s", email, delta)
     now = datetime.now(UTC)
     expires = now + delta
+    logger.debug("generate_password_reset_token(email=%s): now → %s", email, now)
     exp = expires.timestamp()
     encoded_jwt = jwt.encode(
         {"exp": exp, "nbf": now, "sub": email},
         settings.SECRET_KEY,
         algorithm=security.ALGORITHM,
     )
+    logger.debug("<<< Exiting generate_password_reset_token(email=%s)", email)
     return encoded_jwt
 
 
 def verify_password_reset_token(token: str) -> str | None:
+    logger.debug(">>> Entering verify_password_reset_token(token=<redacted>)")
+    logger.debug("verify_password_reset_token(token=<redacted>): decoded_token → %s", decoded_token)
     try:
         decoded_token = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
         )
         return str(decoded_token["sub"])
     except InvalidTokenError:
+        logger.error("Exception in verify_password_reset_token(token=<redacted>)", exc_info=True)
+        logger.debug("<<< Exiting verify_password_reset_token(token=<redacted>)")
         return None

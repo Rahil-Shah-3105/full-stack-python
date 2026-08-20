@@ -23,6 +23,7 @@ import { LoadingButton } from "@/components/ui/loading-button"
 import { PasswordInput } from "@/components/ui/password-input"
 import { isLoggedIn } from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { handleError } from "@/utils"
 
 const searchSchema = z.object({
@@ -67,6 +68,7 @@ export const Route = createFileRoute("/reset-password")({
 })
 
 function ResetPassword() {
+logger.debug('>>> Entering ResetPassword()');
   const { token } = Route.useSearch()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const navigate = useNavigate()
@@ -92,10 +94,14 @@ function ResetPassword() {
     onError: handleError.bind(showErrorToast),
   })
 
+logger.debug(`ResetPassword(): mutation.id → ${mutation?.id}`);
   const onSubmit = (data: FormData) => {
+	logger.debug(`>>> Entering onSubmit(data=${data})`);
     mutation.mutate({ new_password: data.new_password, token })
+	logger.debug(`<<< Exiting onSubmit(data=${data})`);
   }
 
+logger.debug('<<< Exiting ResetPassword()');
   return (
     <AuthLayout>
       <Form {...form}>
