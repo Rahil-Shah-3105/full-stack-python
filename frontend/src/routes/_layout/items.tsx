@@ -8,13 +8,16 @@ import { DataTable } from "@/components/Common/DataTable"
 import AddItem from "@/components/Items/AddItem"
 import { columns } from "@/components/Items/columns"
 import PendingItems from "@/components/Pending/PendingItems"
+const logger = console;
 
 function getItemsQueryOptions() {
+logger.debug('>>> Entering getItemsQueryOptions()');
   return {
     queryFn: async () =>
       (await ItemsService.readItems({ query: { skip: 0, limit: 100 } })).data,
     queryKey: ["items"],
   }
+logger.debug('<<< Exiting getItemsQueryOptions()');
 }
 
 export const Route = createFileRoute("/_layout/items")({
@@ -29,6 +32,7 @@ export const Route = createFileRoute("/_layout/items")({
 })
 
 function ItemsTableContent() {
+logger.debug('>>> Entering ItemsTableContent()');
   const { data: items } = useSuspenseQuery(getItemsQueryOptions())
 
   if (items.data.length === 0) {
@@ -43,10 +47,13 @@ function ItemsTableContent() {
     )
   }
 
+logger.debug('<<< Exiting ItemsTableContent()');
   return <DataTable columns={columns} data={items.data} />
 }
 
 function ItemsTable() {
+logger.debug('>>> Entering ItemsTable()');
+logger.debug('<<< Exiting ItemsTable()');
   return (
     <Suspense fallback={<PendingItems />}>
       <ItemsTableContent />
@@ -55,6 +62,8 @@ function ItemsTable() {
 }
 
 function Items() {
+logger.debug('>>> Entering Items()');
+logger.debug('<<< Exiting Items()');
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">

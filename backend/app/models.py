@@ -4,9 +4,13 @@ from datetime import UTC, datetime
 from pydantic import EmailStr
 from sqlalchemy import DateTime
 from sqlmodel import Field, Relationship, SQLModel
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_datetime_utc() -> datetime:
+    logger.debug(">>> Entering get_datetime_utc()")
+    logger.debug("<<< Exiting get_datetime_utc()")
     return datetime.now(UTC)
 
 

@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Annotated, Literal
 
 import typer
+import logging
+logger = logging.getLogger(__name__)
 
 RELEASE_NOTES_FILE = Path("release-notes.md")
 RELEASE_NOTES_HEADER = "# Release Notes\n\n"
@@ -17,25 +19,32 @@ app = typer.Typer()
 
 
 def parse_version(version: str) -> tuple[int, int, int]:
+    logger.debug(">>> Entering parse_version(version=%s)", version)
     if not re.fullmatch(r"\d+\.\d+\.\d+", version):
         raise ValueError(f"Invalid version: {version!r}. Expected format: X.Y.Z")
     major, minor, patch = version.split(".")
+    logger.debug("<<< Exiting parse_version(version=%s)", version)
     return int(major), int(minor), int(patch)
 
 
 def get_current_version(content: str, release_notes_file: Path) -> str:
+    logger.debug(">>> Entering get_current_version(content=%s,release_notes_file=%s)", content, release_notes_file)
     match = VERSION_HEADING_PATTERN.search(content)
+    logger.debug("get_current_version(content=%s,release_notes_file=%s): match → %s", content, release_notes_file, match)
     if not match:
         raise RuntimeError(f"Could not find a version section in {release_notes_file}")
+    logger.debug("<<< Exiting get_current_version(content=%s,release_notes_file=%s)", content, release_notes_file)
     return match.group(1)
 
 
 def bump_version(version: str, bump: BumpType) -> str:
+    logger.debug(">>> Entering bump_version(version=%s,bump=%s)", version, bump)
     major, minor, patch = parse_version(version)
     if bump == "major":
         return f"{major + 1}.0.0"
     if bump == "minor":
         return f"{major}.{minor + 1}.0"
+    logger.debug("<<< Exiting bump_version(version=%s,bump=%s)", version, bump)
     return f"{major}.{minor}.{patch + 1}"
 
 
@@ -70,21 +79,28 @@ def update_release_notes(
 
 
 def get_release_notes_body(content: str, version: str, release_notes_file: Path) -> str:
+    logger.debug(">>> Entering get_release_notes_body(content=%s,version=%s,release_notes_file=%s)", content, version, release_notes_file)
     version_heading = re.compile(rf"(?m)^## {re.escape(version)}(?: \([^)]+\))?$")
+    logger.debug("get_release_notes_body(content=%s,version=%s,release_notes_file=%s): version_heading → %s", content, version, release_notes_file, version_heading)
     match = version_heading.search(content)
     if not match:
+        logger.debug("get_release_notes_body(content=%s,version=%s,release_notes_file=%s): match → %s", content, version, release_notes_file, match)
         raise RuntimeError(
             f"Could not find release notes section for {version} in "
             f"{release_notes_file}"
         )
 
     next_match = VERSION_HEADING_PATTERN.search(content, match.end())
+    logger.debug("get_release_notes_body(content=%s,version=%s,release_notes_file=%s): next_match → %s", content, version, release_notes_file, next_match)
     end = next_match.start() if next_match else len(content)
+    logger.debug("get_release_notes_body(content=%s,version=%s,release_notes_file=%s): end → %s", content, version, release_notes_file, end)
     body = content[match.end() : end].strip()
     if not body:
+        logger.debug("get_release_notes_body(content=%s,version=%s,release_notes_file=%s): body → %s", content, version, release_notes_file, body)
         raise RuntimeError(
             f"Release notes section for {version} in {release_notes_file} is empty"
         )
+    logger.debug("<<< Exiting get_release_notes_body(content=%s,version=%s,release_notes_file=%s)", content, version, release_notes_file)
     return f"{body}\n"
 
 

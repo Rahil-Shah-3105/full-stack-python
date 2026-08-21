@@ -6,6 +6,8 @@ from sqlmodel import col, func, select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.models import Item, ItemCreate, ItemPublic, ItemsPublic, ItemUpdate, Message
+import logging
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/items", tags=["items"])
 
@@ -50,11 +52,15 @@ def read_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> 
     """
     Get item by ID.
     """
+    logger.debug(">>> Entering read_item(session=%s,current_user=%s,id=%s)", session, current_user, id)
+    logger.info("read_item(session,current_user,id)=%s,%s,%s: find operation took %s ms", session, current_user, id, int((time.time() - __log_start) * 1000))
     item = session.get(Item, id)
+    logger.debug("read_item(session=%s,current_user=%s,id=%s): item → %s", session, current_user, id, item)
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
     if not current_user.is_superuser and (item.owner_id != current_user.id):
         raise HTTPException(status_code=403, detail="Not enough permissions")
+    logger.debug("<<< Exiting read_item(session=%s,current_user=%s,id=%s)", session, current_user, id)
     return item
 
 

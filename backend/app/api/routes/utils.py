@@ -4,6 +4,8 @@ from pydantic.networks import EmailStr
 from app.api.deps import get_current_active_superuser
 from app.models import Message
 from app.utils import generate_test_email, send_email
+import logging
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/utils", tags=["utils"])
 
@@ -17,15 +19,22 @@ def test_email(email_to: EmailStr) -> Message:
     """
     Test emails.
     """
+    logger.debug(">>> Entering test_email(email_to=%s)", email_to)
+    logger.debug("test_email(email_to=%s): subject → %s", email_to, subject)
+    logger.debug("test_email(email_to=%s): html_content → %s", email_to, html_content)
     email_data = generate_test_email(email_to=email_to)
+    logger.debug("test_email(email_to=%s): email_data → %s", email_to, email_data)
     send_email(
         email_to=email_to,
         subject=email_data.subject,
         html_content=email_data.html_content,
     )
+    logger.debug("<<< Exiting test_email(email_to=%s)", email_to)
     return Message(message="Test email sent")
 
 
 @router.get("/health-check/")
 async def health_check() -> bool:
+    logger.debug(">>> Entering health_check()")
+    logger.debug("<<< Exiting health_check()")
     return True

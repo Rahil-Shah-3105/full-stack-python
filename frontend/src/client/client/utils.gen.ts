@@ -9,12 +9,14 @@ import {
 } from '../core/pathSerializer.gen';
 import { getUrl } from '../core/utils.gen';
 import type { Client, ClientOptions, Config, RequestOptions } from './types.gen';
+const logger = console;
 
 export const createQuerySerializer = <T = unknown>({
   parameters = {},
   ...args
 }: QuerySerializerOptions = {}) => {
   const querySerializer = (queryParams: T) => {
+	logger.debug(`>>> Entering querySerializer(queryParams=${queryParams})`);
     const search: string[] = [];
     if (queryParams && typeof queryParams === 'object') {
       for (const name in queryParams) {
@@ -56,6 +58,7 @@ export const createQuerySerializer = <T = unknown>({
         }
       }
     }
+	logger.debug(`<<< Exiting querySerializer(queryParams=${queryParams})`);
     return search.join('&');
   };
   return querySerializer;
@@ -67,6 +70,7 @@ const checkForExistence = (
   },
   name?: string,
 ): boolean => {
+logger.debug(`>>> Entering checkForExistence(options=${options},name=${name})`);
   if (!name) {
     return false;
   }
@@ -80,6 +84,7 @@ const checkForExistence = (
   ) {
     return options.headers['Cookie'].includes(`${name}=`);
   }
+logger.debug(`<<< Exiting checkForExistence(options=${options},name=${name})`);
   return false;
 };
 
@@ -144,8 +149,11 @@ export const buildUrl: Client['buildUrl'] = (options) => {
 };
 
 export const mergeConfigs = (a: Config, b: Config): Config => {
+logger.debug(`>>> Entering mergeConfigs(a=${a},b=${b})`);
   const config = { ...a, ...b };
   config.headers = mergeHeaders(a.headers, b.headers);
+logger.debug(`mergeConfigs(a=${a},b=${b}): config → ${config}`);
+logger.debug(`<<< Exiting mergeConfigs(a=${a},b=${b})`);
   return config;
 };
 
@@ -165,6 +173,7 @@ export const axiosHeadersKeywords = [
 export const mergeHeaders = (
   ...headers: Array<Required<Config>['headers'] | undefined>
 ): Record<any, unknown> => {
+logger.debug(`>>> Entering mergeHeaders(headers=${headers})`);
   const mergedHeaders: Record<any, unknown> = {};
   for (const header of headers) {
     if (!header || typeof header !== 'object') {
@@ -172,6 +181,7 @@ export const mergeHeaders = (
     }
 
     const iterator = Object.entries(header);
+	logger.debug(`mergeHeaders(headers=${headers}): iterator → ${iterator}`);
 
     for (const [key, value] of iterator) {
       if (
@@ -196,6 +206,7 @@ export const mergeHeaders = (
       }
     }
   }
+logger.debug(`<<< Exiting mergeHeaders(headers=${headers})`);
   return mergedHeaders;
 };
 
