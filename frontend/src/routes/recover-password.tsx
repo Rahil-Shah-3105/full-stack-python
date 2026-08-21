@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import { isLoggedIn } from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { handleError } from "@/utils"
 
 const formSchema = z.object({
@@ -49,6 +50,7 @@ export const Route = createFileRoute("/recover-password")({
 })
 
 function RecoverPassword() {
+logger.debug('>>> Entering RecoverPassword()');
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,9 +60,12 @@ function RecoverPassword() {
   const { showSuccessToast, showErrorToast } = useCustomToast()
 
   const recoverPassword = async (data: FormData) => {
+	logger.debug(`>>> Entering recoverPassword(data=${data})`);
     await LoginService.recoverPassword({
       path: { email: data.email },
     })
+	logger.debug('<<< Exiting RecoverPassword()');
+	logger.debug(`<<< Exiting recoverPassword(data=${data})`);
   }
 
   const mutation = useMutation({
@@ -72,11 +77,15 @@ function RecoverPassword() {
     onError: handleError.bind(showErrorToast),
   })
 
+logger.debug(`RecoverPassword(): mutation.id → ${mutation?.id}`);
   const onSubmit = async (data: FormData) => {
+	logger.debug(`>>> Entering onSubmit(data=${data})`);
     if (mutation.isPending) return
     mutation.mutate(data)
+	logger.debug(`<<< Exiting onSubmit(data=${data})`);
   }
 
+logger.debug('<<< Exiting RecoverPassword()');
   return (
     <AuthLayout>
       <Form {...form}>

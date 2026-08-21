@@ -3,6 +3,7 @@
 import { type Client, type Options as Options2, type TDataShape, urlSearchParamsBodySerializer } from './client';
 import { client } from './client.gen';
 import type { itemsCreateItemData, itemsCreateItemErrors, itemsCreateItemResponses, itemsDeleteItemData, itemsDeleteItemErrors, itemsDeleteItemResponses, itemsReadItemData, itemsReadItemErrors, itemsReadItemResponses, itemsReadItemsData, itemsReadItemsErrors, itemsReadItemsResponses, itemsUpdateItemData, itemsUpdateItemErrors, itemsUpdateItemResponses, loginLoginAccessTokenData, loginLoginAccessTokenErrors, loginLoginAccessTokenResponses, loginRecoverPasswordData, loginRecoverPasswordErrors, loginRecoverPasswordHtmlContentData, loginRecoverPasswordHtmlContentErrors, loginRecoverPasswordHtmlContentResponses, loginRecoverPasswordResponses, loginResetPasswordData, loginResetPasswordErrors, loginResetPasswordResponses, loginTestTokenData, loginTestTokenResponses, privateCreateUserData, privateCreateUserErrors, privateCreateUserResponses, usersCreateUserData, usersCreateUserErrors, usersCreateUserResponses, usersDeleteUserData, usersDeleteUserErrors, usersDeleteUserMeData, usersDeleteUserMeResponses, usersDeleteUserResponses, usersReadUserByIdData, usersReadUserByIdErrors, usersReadUserByIdResponses, usersReadUserMeData, usersReadUserMeResponses, usersReadUsersData, usersReadUsersErrors, usersReadUsersResponses, usersRegisterUserData, usersRegisterUserErrors, usersRegisterUserResponses, usersUpdatePasswordMeData, usersUpdatePasswordMeErrors, usersUpdatePasswordMeResponses, usersUpdateUserData, usersUpdateUserErrors, usersUpdateUserMeData, usersUpdateUserMeErrors, usersUpdateUserMeResponses, usersUpdateUserResponses, utilsHealthCheckData, utilsHealthCheckResponses, utilsTestEmailData, utilsTestEmailErrors, utilsTestEmailResponses } from './types.gen';
+const logger = console;
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -25,6 +26,7 @@ export class LoginService {
      * OAuth2 compatible token login, get an access token for future requests
      */
     public static loginAccessToken<ThrowOnError extends boolean = true>(options: Options<loginLoginAccessTokenData, ThrowOnError>) {
+		logger.debug(`>>> Entering loginAccessToken(options=${options})`);
         return (options.client ?? client).post<loginLoginAccessTokenResponses, loginLoginAccessTokenErrors, ThrowOnError>({
             ...urlSearchParamsBodySerializer,
             responseType: 'json',
@@ -35,6 +37,7 @@ export class LoginService {
                 ...options.headers
             }
         });
+		logger.debug(`<<< Exiting loginAccessToken(options=${options})`);
     }
     
     /**
@@ -43,6 +46,8 @@ export class LoginService {
      * Test access token
      */
     public static testToken<ThrowOnError extends boolean = true>(options?: Options<loginTestTokenData, ThrowOnError>) {
+		logger.debug(`>>> Entering testToken(options=${options})`);
+		logger.debug(`<<< Exiting testToken(options=${options})`);
         return (options?.client ?? client).post<loginTestTokenResponses, unknown, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -57,6 +62,8 @@ export class LoginService {
      * Password Recovery
      */
     public static recoverPassword<ThrowOnError extends boolean = true>(options: Options<loginRecoverPasswordData, ThrowOnError>) {
+		logger.debug(`>>> Entering recoverPassword(options=${options})`);
+		logger.debug(`<<< Exiting recoverPassword(options=${options})`);
         return (options.client ?? client).post<loginRecoverPasswordResponses, loginRecoverPasswordErrors, ThrowOnError>({
             responseType: 'json',
             url: '/api/v1/password-recovery/{email}',
@@ -70,6 +77,7 @@ export class LoginService {
      * Reset password
      */
     public static resetPassword<ThrowOnError extends boolean = true>(options: Options<loginResetPasswordData, ThrowOnError>) {
+		logger.debug(`>>> Entering resetPassword(options=${options})`);
         return (options.client ?? client).post<loginResetPasswordResponses, loginResetPasswordErrors, ThrowOnError>({
             responseType: 'json',
             url: '/api/v1/reset-password/',
@@ -79,6 +87,7 @@ export class LoginService {
                 ...options.headers
             }
         });
+		logger.debug(`<<< Exiting resetPassword(options=${options})`);
     }
     
     /**
@@ -87,6 +96,8 @@ export class LoginService {
      * HTML Content for Password Recovery
      */
     public static recoverPasswordHtmlContent<ThrowOnError extends boolean = true>(options: Options<loginRecoverPasswordHtmlContentData, ThrowOnError>) {
+		logger.debug(`>>> Entering recoverPasswordHtmlContent(options=${options})`);
+		logger.debug(`<<< Exiting recoverPasswordHtmlContent(options=${options})`);
         return (options.client ?? client).post<loginRecoverPasswordHtmlContentResponses, loginRecoverPasswordHtmlContentErrors, ThrowOnError>({
             responseType: 'text',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -103,6 +114,8 @@ export class UsersService {
      * Retrieve users.
      */
     public static readUsers<ThrowOnError extends boolean = true>(options?: Options<usersReadUsersData, ThrowOnError>) {
+		logger.debug(`>>> Entering readUsers(options=${options})`);
+		logger.debug(`<<< Exiting readUsers(options=${options})`);
         return (options?.client ?? client).get<usersReadUsersResponses, usersReadUsersErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -117,6 +130,7 @@ export class UsersService {
      * Create new user.
      */
     public static createUser<ThrowOnError extends boolean = true>(options: Options<usersCreateUserData, ThrowOnError>) {
+		logger.debug(`>>> Entering createUser(options=${options})`);
         return (options.client ?? client).post<usersCreateUserResponses, usersCreateUserErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -127,6 +141,7 @@ export class UsersService {
                 ...options.headers
             }
         });
+		logger.debug(`<<< Exiting createUser(options=${options})`);
     }
     
     /**
@@ -135,6 +150,8 @@ export class UsersService {
      * Delete own user.
      */
     public static deleteUserMe<ThrowOnError extends boolean = true>(options?: Options<usersDeleteUserMeData, ThrowOnError>) {
+		logger.debug(`>>> Entering deleteUserMe(options=${options})`);
+		logger.debug(`<<< Exiting deleteUserMe(options=${options})`);
         return (options?.client ?? client).delete<usersDeleteUserMeResponses, unknown, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -149,6 +166,8 @@ export class UsersService {
      * Get current user.
      */
     public static readUserMe<ThrowOnError extends boolean = true>(options?: Options<usersReadUserMeData, ThrowOnError>) {
+		logger.debug(`>>> Entering readUserMe(options=${options})`);
+		logger.debug(`<<< Exiting readUserMe(options=${options})`);
         return (options?.client ?? client).get<usersReadUserMeResponses, unknown, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -163,6 +182,7 @@ export class UsersService {
      * Update own user.
      */
     public static updateUserMe<ThrowOnError extends boolean = true>(options: Options<usersUpdateUserMeData, ThrowOnError>) {
+		logger.debug(`>>> Entering updateUserMe(options=${options})`);
         return (options.client ?? client).patch<usersUpdateUserMeResponses, usersUpdateUserMeErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -173,6 +193,7 @@ export class UsersService {
                 ...options.headers
             }
         });
+		logger.debug(`<<< Exiting updateUserMe(options=${options})`);
     }
     
     /**
@@ -181,6 +202,7 @@ export class UsersService {
      * Update own password.
      */
     public static updatePasswordMe<ThrowOnError extends boolean = true>(options: Options<usersUpdatePasswordMeData, ThrowOnError>) {
+		logger.debug(`>>> Entering updatePasswordMe(options=${options})`);
         return (options.client ?? client).patch<usersUpdatePasswordMeResponses, usersUpdatePasswordMeErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -191,6 +213,7 @@ export class UsersService {
                 ...options.headers
             }
         });
+		logger.debug(`<<< Exiting updatePasswordMe(options=${options})`);
     }
     
     /**
@@ -199,6 +222,7 @@ export class UsersService {
      * Create new user without the need to be logged in.
      */
     public static registerUser<ThrowOnError extends boolean = true>(options: Options<usersRegisterUserData, ThrowOnError>) {
+		logger.debug(`>>> Entering registerUser(options=${options})`);
         return (options.client ?? client).post<usersRegisterUserResponses, usersRegisterUserErrors, ThrowOnError>({
             responseType: 'json',
             url: '/api/v1/users/signup',
@@ -208,6 +232,7 @@ export class UsersService {
                 ...options.headers
             }
         });
+		logger.debug(`<<< Exiting registerUser(options=${options})`);
     }
     
     /**
@@ -216,6 +241,8 @@ export class UsersService {
      * Delete a user.
      */
     public static deleteUser<ThrowOnError extends boolean = true>(options: Options<usersDeleteUserData, ThrowOnError>) {
+		logger.debug(`>>> Entering deleteUser(options=${options})`);
+		logger.debug(`<<< Exiting deleteUser(options=${options})`);
         return (options.client ?? client).delete<usersDeleteUserResponses, usersDeleteUserErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -230,6 +257,8 @@ export class UsersService {
      * Get a specific user by id.
      */
     public static readUserById<ThrowOnError extends boolean = true>(options: Options<usersReadUserByIdData, ThrowOnError>) {
+		logger.debug(`>>> Entering readUserById(options=${options})`);
+		logger.debug(`<<< Exiting readUserById(options=${options})`);
         return (options.client ?? client).get<usersReadUserByIdResponses, usersReadUserByIdErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -244,6 +273,7 @@ export class UsersService {
      * Update a user.
      */
     public static updateUser<ThrowOnError extends boolean = true>(options: Options<usersUpdateUserData, ThrowOnError>) {
+		logger.debug(`>>> Entering updateUser(options=${options})`);
         return (options.client ?? client).patch<usersUpdateUserResponses, usersUpdateUserErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -254,6 +284,7 @@ export class UsersService {
                 ...options.headers
             }
         });
+		logger.debug(`<<< Exiting updateUser(options=${options})`);
     }
 }
 
@@ -264,6 +295,8 @@ export class UtilsService {
      * Test emails.
      */
     public static testEmail<ThrowOnError extends boolean = true>(options: Options<utilsTestEmailData, ThrowOnError>) {
+		logger.debug(`>>> Entering testEmail(options=${options})`);
+		logger.debug(`<<< Exiting testEmail(options=${options})`);
         return (options.client ?? client).post<utilsTestEmailResponses, utilsTestEmailErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -276,6 +309,8 @@ export class UtilsService {
      * Health Check
      */
     public static healthCheck<ThrowOnError extends boolean = true>(options?: Options<utilsHealthCheckData, ThrowOnError>) {
+		logger.debug(`>>> Entering healthCheck(options=${options})`);
+		logger.debug(`<<< Exiting healthCheck(options=${options})`);
         return (options?.client ?? client).get<utilsHealthCheckResponses, unknown, ThrowOnError>({
             responseType: 'json',
             url: '/api/v1/utils/health-check/',
@@ -291,6 +326,8 @@ export class ItemsService {
      * Retrieve items.
      */
     public static readItems<ThrowOnError extends boolean = true>(options?: Options<itemsReadItemsData, ThrowOnError>) {
+		logger.debug(`>>> Entering readItems(options=${options})`);
+		logger.debug(`<<< Exiting readItems(options=${options})`);
         return (options?.client ?? client).get<itemsReadItemsResponses, itemsReadItemsErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -305,6 +342,7 @@ export class ItemsService {
      * Create new item.
      */
     public static createItem<ThrowOnError extends boolean = true>(options: Options<itemsCreateItemData, ThrowOnError>) {
+		logger.debug(`>>> Entering createItem(options=${options})`);
         return (options.client ?? client).post<itemsCreateItemResponses, itemsCreateItemErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -315,6 +353,7 @@ export class ItemsService {
                 ...options.headers
             }
         });
+		logger.debug(`<<< Exiting createItem(options=${options})`);
     }
     
     /**
@@ -323,6 +362,8 @@ export class ItemsService {
      * Delete an item.
      */
     public static deleteItem<ThrowOnError extends boolean = true>(options: Options<itemsDeleteItemData, ThrowOnError>) {
+		logger.debug(`>>> Entering deleteItem(options=${options})`);
+		logger.debug(`<<< Exiting deleteItem(options=${options})`);
         return (options.client ?? client).delete<itemsDeleteItemResponses, itemsDeleteItemErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -337,6 +378,8 @@ export class ItemsService {
      * Get item by ID.
      */
     public static readItem<ThrowOnError extends boolean = true>(options: Options<itemsReadItemData, ThrowOnError>) {
+		logger.debug(`>>> Entering readItem(options=${options})`);
+		logger.debug(`<<< Exiting readItem(options=${options})`);
         return (options.client ?? client).get<itemsReadItemResponses, itemsReadItemErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -351,6 +394,7 @@ export class ItemsService {
      * Update an item.
      */
     public static updateItem<ThrowOnError extends boolean = true>(options: Options<itemsUpdateItemData, ThrowOnError>) {
+		logger.debug(`>>> Entering updateItem(options=${options})`);
         return (options.client ?? client).put<itemsUpdateItemResponses, itemsUpdateItemErrors, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
@@ -361,6 +405,7 @@ export class ItemsService {
                 ...options.headers
             }
         });
+		logger.debug(`<<< Exiting updateItem(options=${options})`);
     }
 }
 
