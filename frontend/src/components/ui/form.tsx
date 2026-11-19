@@ -49,6 +49,7 @@ logger.error('>>> Entering useFormField()', { "event.action": "useFormField" });
   const formState = useFormState({ name: fieldContext.name })
   const fieldState = getFieldState(fieldContext.name, formState)
 
+logger.error(`useFormField(): formState → ${formState}`, { "event.action": "useFormField" });
 logger.error(`useFormField(): fieldContext.id → ${fieldContext?.id}`, { "event.action": "useFormField" });
 logger.error(`useFormField(): itemContext.id → ${itemContext?.id}`, { "event.action": "useFormField" });
   if (!fieldContext) {

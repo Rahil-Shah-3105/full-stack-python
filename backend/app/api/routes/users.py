@@ -111,9 +111,12 @@ def update_user_me(
             logger.error("update_user_me(session=%s,user_in=%s,current_user=%s): status_code → %s", session, user_in, current_user, status_code, extra={"event.action": "update_user_me", "logrite.user_in": user_in, "logrite.current_user": current_user})
     user_data = user_in.model_dump(exclude_unset=True)
     current_user.sqlmodel_update(user_data)
+    __log_start = time.time()
     logger.error("update_user_me(session=%s,user_in=%s,current_user=%s): user_data → %s", session, user_in, current_user, user_data, extra={"event.action": "update_user_me", "logrite.user_in": user_in, "logrite.current_user": current_user})
     session.add(current_user)
+    logger.error("update_user_me(session,user_in,current_user)=%s,%s,%s: save operation took %s ms", session, user_in, current_user, int((time.time() - __log_start) * 1000), extra={"event.action": "update_user_me", "event.category": "database", "logrite.user_in": user_in, "logrite.current_user": current_user})
     session.commit()
+    logger.error("update_user_me(session,user_in,current_user)=%s,%s,%s: database operation took %s ms", session, user_in, current_user, int((time.time() - __log_start) * 1000), extra={"event.action": "update_user_me", "event.category": "database", "logrite.user_in": user_in, "logrite.current_user": current_user})
     session.refresh(current_user)
     logger.warning("<<< Exiting update_user_me(session=%s,user_in=%s,current_user=%s)", session, user_in, current_user, extra={"event.action": "update_user_me", "logrite.user_in": user_in, "logrite.current_user": current_user})
     return current_user

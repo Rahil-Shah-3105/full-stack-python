@@ -155,6 +155,7 @@ export function createSseClient<TData = unknown>({
 			logger.error('Exception in createStream():', (error as Error).message, error, { "event.action": "createStream", "event.category": "process" });
             // noop
 			logger.error('Exception in abortHandler()', { "event.action": "abortHandler", "event.category": "process" });
+			logger.warn('<<< Exiting abortHandler()', { "event.action": "abortHandler" });
           }
         };
 
@@ -248,6 +249,7 @@ export function createSseClient<TData = unknown>({
         const backoff = Math.min(retryDelay * 2 ** (attempt - 1), sseMaxRetryDelay ?? 30000);
         await sleep(backoff);
 		logger.error(`createStream(): backoff → ${backoff}`, { "event.action": "createStream" });
+		logger.warn('<<< Exiting createStream()', { "event.action": "createStream" });
       }
     }
   };
