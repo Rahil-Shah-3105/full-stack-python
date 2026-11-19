@@ -51,6 +51,7 @@ logger.error(`useAuth(): signUpMutation.id → ${signUpMutation?.id}`, { "event.
     })
     localStorage.setItem("access_token", response.data.access_token)
 	logger.error(`login(data=${data}): response → ${response}`, { "event.action": "login" });
+	logger.warn(`<<< Exiting login(data=${data})`, { "event.action": "login" });
   }
 
   const loginMutation = useMutation({

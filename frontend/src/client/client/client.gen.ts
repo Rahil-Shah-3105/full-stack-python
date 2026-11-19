@@ -118,6 +118,7 @@ logger.error(`createClient(config=${config}): _config → ${_config}`, { "event.
       // @ts-expect-error
       e.error = e.response?.data ?? {};
 	logger.debug(`request(options=${options}): e.error → ${e.error}`, { "event.action": "request", "logrite.options": options });
+	logger.warn(`<<< Exiting request(options=${options})`, { "event.action": "request", "logrite.options": options });
       return e;
     }
   };

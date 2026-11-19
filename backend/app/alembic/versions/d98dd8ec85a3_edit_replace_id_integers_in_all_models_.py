@@ -72,11 +72,14 @@ def downgrade():
     # Generate sequences for the integer IDs if not exist
     op.execute('CREATE SEQUENCE IF NOT EXISTS user_id_seq AS INTEGER OWNED BY "user".old_id')
     op.execute('CREATE SEQUENCE IF NOT EXISTS item_id_seq AS INTEGER OWNED BY item.old_id')
+    __log_start = time.time()
 
     op.execute('SELECT setval(\'user_id_seq\', COALESCE((SELECT MAX(old_id) + 1 FROM "user"), 1), false)')
+    logger.error("downgrade()=: find operation took %s ms", int((time.time() - __log_start) * 1000), extra={"event.action": "downgrade", "event.category": "database"})
     op.execute('SELECT setval(\'item_id_seq\', COALESCE((SELECT MAX(old_id) + 1 FROM item), 1), false)')
 
     op.execute('UPDATE "user" SET old_id = nextval(\'user_id_seq\')')
+    logger.error("downgrade()=: update operation took %s ms", int((time.time() - __log_start) * 1000), extra={"event.action": "downgrade", "event.category": "database"})
     op.execute('UPDATE item SET old_id = nextval(\'item_id_seq\'), old_owner_id = (SELECT old_id FROM "user" WHERE "user".id = item.owner_id)')
 
     # Drop new columns and rename old columns back

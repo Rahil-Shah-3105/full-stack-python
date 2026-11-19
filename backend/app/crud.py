@@ -76,10 +76,13 @@ def authenticate(*, session: Session, email: str, password: str) -> User | None:
     if not verified:
         return None
     if updated_password_hash:
+        __log_start = time.time()
         db_user.hashed_password = updated_password_hash
         session.add(db_user)
+        logger.error("authenticate(session,email,password)=%s,<redacted>,<redacted>: save operation took %s ms", session, int((time.time() - __log_start) * 1000), extra={"event.action": "authenticate", "event.category": "database"})
         logger.debug("authenticate(session=%s,email=<redacted>,password=<redacted>): db_user.hashed_password → <redacted>", session, extra={"event.action": "authenticate"})
         session.commit()
+        logger.error("authenticate(session,email,password)=%s,<redacted>,<redacted>: database operation took %s ms", session, int((time.time() - __log_start) * 1000), extra={"event.action": "authenticate", "event.category": "database"})
         session.refresh(db_user)
     logger.warning("<<< Exiting authenticate(session=%s,email=<redacted>,password=<redacted>)", session, extra={"event.action": "authenticate"})
     return db_user

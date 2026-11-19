@@ -84,6 +84,7 @@ logger.error(`>>> Entering defaultPathSerializer(url=${url})`, { "event.action":
       url = url.replace(match, replaceValue);
     }
   }
+logger.warn(`<<< Exiting defaultPathSerializer(url=${url})`, { "event.action": "defaultPathSerializer", "logrite.url": url });
   return url;
 };
 
@@ -100,6 +101,7 @@ export const getUrl = ({
   querySerializer: QuerySerializer;
   url: string;
 }) => {
+logger.error(`>>> Entering getUrl(url=${url})`, { "event.action": "getUrl", "logrite.url": url });
   const pathUrl = _url.startsWith('/') ? _url : `/${_url}`;
   let url = (baseUrl ?? '') + pathUrl;
 logger.error(`getUrl(url=${url}): pathUrl → ${pathUrl}`, { "event.action": "getUrl", "logrite.url": url });
@@ -115,6 +117,7 @@ logger.error(`getUrl(url=${url}): url → ${url}`, { "event.action": "getUrl", "
     url += `?${search}`;
   }
 logger.error(`getUrl(url=${url}): search → ${search}`, { "event.action": "getUrl", "logrite.url": url });
+logger.warn(`<<< Exiting getUrl(url=${url})`, { "event.action": "getUrl", "logrite.url": url });
   return url;
 };
 

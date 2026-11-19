@@ -74,13 +74,19 @@ def read_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> 
 def create_item(
     *, session: SessionDep, current_user: CurrentUser, item_in: ItemCreate
 ) -> Any:
+    logger.error(">>> Entering create_item(session=%s,current_user=%s,item_in=%s)", session, current_user, item_in, extra={"event.action": "create_item", "logrite.current_user": current_user, "logrite.item_in": item_in})
     """
     Create new item.
     """
+    __log_start = time.time()
     item = Item.model_validate(item_in, update={"owner_id": current_user.id})
     session.add(item)
+    logger.error("create_item(session=%s,current_user=%s,item_in=%s): item → %s", session, current_user, item_in, item, extra={"event.action": "create_item", "logrite.current_user": current_user, "logrite.item_in": item_in})
     session.commit()
+    logger.error("create_item(session,current_user,item_in)=%s,%s,%s: database operation took %s ms", session, current_user, item_in, int((time.time() - __log_start) * 1000), extra={"event.action": "create_item", "event.category": "database", "logrite.current_user": current_user, "logrite.item_in": item_in})
     session.refresh(item)
+    logger.error("create_item(session,current_user,item_in)=%s,%s,%s: save operation took %s ms", session, current_user, item_in, int((time.time() - __log_start) * 1000), extra={"event.action": "create_item", "event.category": "database", "logrite.current_user": current_user, "logrite.item_in": item_in})
+    logger.warning("<<< Exiting create_item(session=%s,current_user=%s,item_in=%s)", session, current_user, item_in, extra={"event.action": "create_item", "logrite.current_user": current_user, "logrite.item_in": item_in})
     return item
 
 

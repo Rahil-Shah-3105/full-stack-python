@@ -58,6 +58,7 @@ logger.error(`>>> Entering isPlainObject(value=${value})`, { "event.action": "is
   }
   const prototype = Object.getPrototypeOf(value as object);
 logger.error(`isPlainObject(value=${value}): prototype → ${prototype}`, { "event.action": "isPlainObject", "logrite.value": value });
+logger.warn(`<<< Exiting isPlainObject(value=${value})`, { "event.action": "isPlainObject", "logrite.value": value });
   return prototype === Object.prototype || prototype === null;
 };
 
