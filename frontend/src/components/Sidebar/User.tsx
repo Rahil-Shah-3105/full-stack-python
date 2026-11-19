@@ -17,6 +17,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import useAuth from "@/hooks/useAuth"
+const logger = console;
 import { getInitials } from "@/utils"
 
 interface UserInfoProps {
@@ -25,6 +26,8 @@ interface UserInfoProps {
 }
 
 function UserInfo({ fullName, email }: UserInfoProps) {
+logger.error('>>> Entering UserInfo()', { "event.action": "UserInfo" });
+logger.warn('<<< Exiting UserInfo()', { "event.action": "UserInfo" });
   return (
     <div className="flex items-center gap-2.5 w-full min-w-0">
       <Avatar className="size-8">
@@ -41,20 +44,26 @@ function UserInfo({ fullName, email }: UserInfoProps) {
 }
 
 export function User({ user }: { user: any }) {
+logger.error('>>> Entering User()', { "event.action": "User" });
   const { logout } = useAuth()
   const { isMobile, setOpenMobile } = useSidebar()
 
   if (!user) return null
 
   const handleMenuClick = () => {
+	logger.error('>>> Entering handleMenuClick()', { "event.action": "handleMenuClick" });
     if (isMobile) {
       setOpenMobile(false)
     }
+	logger.warn('<<< Exiting handleMenuClick()', { "event.action": "handleMenuClick" });
   }
   const handleLogout = async () => {
+	logger.error('>>> Entering handleLogout()', { "event.action": "handleLogout" });
     logout()
+	logger.warn('<<< Exiting handleLogout()', { "event.action": "handleLogout" });
   }
 
+logger.warn('<<< Exiting User()', { "event.action": "User" });
   return (
     <SidebarMenu>
       <SidebarMenuItem>

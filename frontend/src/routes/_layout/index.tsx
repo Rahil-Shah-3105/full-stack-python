@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 
 import useAuth from "@/hooks/useAuth"
+const logger = console;
 
 export const Route = createFileRoute("/_layout/")({
   component: Dashboard,
@@ -14,8 +15,10 @@ export const Route = createFileRoute("/_layout/")({
 })
 
 function Dashboard() {
+logger.error('>>> Entering Dashboard()', { "event.action": "Dashboard" });
   const { user: currentUser } = useAuth()
 
+logger.warn('<<< Exiting Dashboard()', { "event.action": "Dashboard" });
   return (
     <div>
       <div>

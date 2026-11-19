@@ -8,13 +8,16 @@ import { columns, type UserTableData } from "@/components/Admin/columns"
 import { DataTable } from "@/components/Common/DataTable"
 import PendingUsers from "@/components/Pending/PendingUsers"
 import useAuth from "@/hooks/useAuth"
+const logger = console;
 
 function getUsersQueryOptions() {
+logger.error('>>> Entering getUsersQueryOptions()', { "event.action": "getUsersQueryOptions" });
   return {
     queryFn: async () =>
       (await UsersService.readUsers({ query: { skip: 0, limit: 100 } })).data,
     queryKey: ["users"],
   }
+logger.warn('<<< Exiting getUsersQueryOptions()', { "event.action": "getUsersQueryOptions" });
 }
 
 export const Route = createFileRoute("/_layout/admin")({
@@ -37,6 +40,7 @@ export const Route = createFileRoute("/_layout/admin")({
 })
 
 function UsersTableContent() {
+logger.error('>>> Entering UsersTableContent()', { "event.action": "UsersTableContent" });
   const { user: currentUser } = useAuth()
   const { data: users } = useSuspenseQuery(getUsersQueryOptions())
 
@@ -45,10 +49,13 @@ function UsersTableContent() {
     isCurrentUser: currentUser?.id === user.id,
   }))
 
+logger.warn('<<< Exiting UsersTableContent()', { "event.action": "UsersTableContent" });
   return <DataTable columns={columns} data={tableData} />
 }
 
 function UsersTable() {
+logger.error('>>> Entering UsersTable()', { "event.action": "UsersTable" });
+logger.warn('<<< Exiting UsersTable()', { "event.action": "UsersTable" });
   return (
     <Suspense fallback={<PendingUsers />}>
       <UsersTableContent />
@@ -57,6 +64,8 @@ function UsersTable() {
 }
 
 function Admin() {
+logger.error('>>> Entering Admin()', { "event.action": "Admin" });
+logger.warn('<<< Exiting Admin()', { "event.action": "Admin" });
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">

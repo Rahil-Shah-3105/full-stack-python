@@ -17,6 +17,7 @@ import {
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { LoadingButton } from "@/components/ui/loading-button"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { handleError } from "@/utils"
 
 interface DeleteItemProps {
@@ -25,13 +26,19 @@ interface DeleteItemProps {
 }
 
 const DeleteItem = ({ id, onSuccess }: DeleteItemProps) => {
+logger.error('>>> Entering DeleteItem()', { "event.action": "DeleteItem" });
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { handleSubmit } = useForm()
 
+logger.error(`DeleteItem(): queryClient → ${queryClient}`, { "event.action": "DeleteItem" });
+logger.debug(`DeleteItem: isOpen → ${isOpen}`, { "event.action": "DeleteItem" });
   const deleteItem = async (id: string) => {
+	logger.error(`>>> Entering deleteItem(id=${id})`, { "event.action": "deleteItem", "logrite.id": id });
     await ItemsService.deleteItem({ path: { id } })
+	logger.warn('<<< Exiting DeleteItem()', { "event.action": "DeleteItem" });
+	logger.warn(`<<< Exiting deleteItem(id=${id})`, { "event.action": "deleteItem", "logrite.id": id });
   }
 
   const mutation = useMutation({
@@ -47,10 +54,14 @@ const DeleteItem = ({ id, onSuccess }: DeleteItemProps) => {
     },
   })
 
+logger.error(`DeleteItem(): mutation.id → ${mutation?.id}`, { "event.action": "DeleteItem" });
   const onSubmit = async () => {
+	logger.error('>>> Entering onSubmit()', { "event.action": "onSubmit" });
     mutation.mutate(id)
+	logger.warn('<<< Exiting onSubmit()', { "event.action": "onSubmit" });
   }
 
+logger.warn('<<< Exiting DeleteItem()', { "event.action": "DeleteItem" });
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuItem

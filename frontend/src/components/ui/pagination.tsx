@@ -1,4 +1,5 @@
 import * as React from "react"
+const logger = console;
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -9,6 +10,8 @@ import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
+logger.error('>>> Entering Pagination()', { "event.action": "Pagination" });
+logger.warn('<<< Exiting Pagination()', { "event.action": "Pagination" });
   return (
     <nav
       role="navigation"

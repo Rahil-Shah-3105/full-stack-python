@@ -1,5 +1,6 @@
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
+const logger = console;
 import { XIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -79,6 +80,8 @@ function DialogContent({
 }
 
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering DialogHeader()', { "event.action": "DialogHeader" });
+logger.warn('<<< Exiting DialogHeader()', { "event.action": "DialogHeader" });
   return (
     <div
       data-slot="dialog-header"
@@ -89,6 +92,8 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering DialogFooter()', { "event.action": "DialogFooter" });
+logger.warn('<<< Exiting DialogFooter()', { "event.action": "DialogFooter" });
   return (
     <div
       data-slot="dialog-footer"

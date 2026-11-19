@@ -1,8 +1,10 @@
 import * as React from "react"
+const logger = console;
 
 const MOBILE_BREAKPOINT = 768
 
 export function useIsMobile() {
+logger.error('>>> Entering useIsMobile()', { "event.action": "useIsMobile" });
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
 
   React.useEffect(() => {
@@ -15,5 +17,6 @@ export function useIsMobile() {
     return () => mql.removeEventListener("change", onChange)
   }, [])
 
+logger.warn('<<< Exiting useIsMobile()', { "event.action": "useIsMobile" });
   return !!isMobile
 }

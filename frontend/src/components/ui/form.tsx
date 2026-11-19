@@ -1,5 +1,6 @@
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
+const logger = console;
 import { Slot } from "@radix-ui/react-slot"
 import {
   Controller,
@@ -41,12 +42,15 @@ const FormField = <
 }
 
 const useFormField = () => {
+logger.error('>>> Entering useFormField()', { "event.action": "useFormField" });
   const fieldContext = React.useContext(FormFieldContext)
   const itemContext = React.useContext(FormItemContext)
   const { getFieldState } = useFormContext()
   const formState = useFormState({ name: fieldContext.name })
   const fieldState = getFieldState(fieldContext.name, formState)
 
+logger.error(`useFormField(): fieldContext.id → ${fieldContext?.id}`, { "event.action": "useFormField" });
+logger.error(`useFormField(): itemContext.id → ${itemContext?.id}`, { "event.action": "useFormField" });
   if (!fieldContext) {
     throw new Error("useFormField should be used within <FormField>")
   }
@@ -61,6 +65,7 @@ const useFormField = () => {
     formMessageId: `${id}-form-item-message`,
     ...fieldState,
   }
+logger.warn('<<< Exiting useFormField()', { "event.action": "useFormField" });
 }
 
 type FormItemContextValue = {
@@ -72,8 +77,11 @@ const FormItemContext = React.createContext<FormItemContextValue>(
 )
 
 function FormItem({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering FormItem()', { "event.action": "FormItem" });
   const id = React.useId()
 
+logger.error(`FormItem(): id → ${id}`, { "event.action": "FormItem" });
+logger.warn('<<< Exiting FormItem()', { "event.action": "FormItem" });
   return (
     <FormItemContext.Provider value={{ id }}>
       <div
@@ -103,8 +111,10 @@ function FormLabel({
 }
 
 function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
+logger.error('>>> Entering FormControl()', { "event.action": "FormControl" });
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 
+logger.warn('<<< Exiting FormControl()', { "event.action": "FormControl" });
   return (
     <Slot
       data-slot="form-control"
@@ -121,8 +131,10 @@ function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
 }
 
 function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
+logger.error('>>> Entering FormDescription()', { "event.action": "FormDescription" });
   const { formDescriptionId } = useFormField()
 
+logger.warn('<<< Exiting FormDescription()', { "event.action": "FormDescription" });
   return (
     <p
       data-slot="form-description"
@@ -134,13 +146,16 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 }
 
 function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
+logger.error('>>> Entering FormMessage()', { "event.action": "FormMessage" });
   const { error, formMessageId } = useFormField()
   const body = error ? String(error?.message ?? "") : props.children
+logger.error(`FormMessage(): body → ${body}`, { "event.action": "FormMessage" });
 
   if (!body) {
     return null
   }
 
+logger.warn('<<< Exiting FormMessage()', { "event.action": "FormMessage" });
   return (
     <p
       data-slot="form-message"

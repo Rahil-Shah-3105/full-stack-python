@@ -11,12 +11,14 @@ import {
 import useAuth from "@/hooks/useAuth"
 import DeleteUser from "./DeleteUser"
 import EditUser from "./EditUser"
+const logger = console;
 
 interface UserActionsMenuProps {
   user: UserPublic
 }
 
 export const UserActionsMenu = ({ user }: UserActionsMenuProps) => {
+logger.error('>>> Entering UserActionsMenu()', { "event.action": "UserActionsMenu" });
   const [open, setOpen] = useState(false)
   const { user: currentUser } = useAuth()
 
@@ -24,6 +26,7 @@ export const UserActionsMenu = ({ user }: UserActionsMenuProps) => {
     return null
   }
 
+logger.warn('<<< Exiting UserActionsMenu()', { "event.action": "UserActionsMenu" });
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>

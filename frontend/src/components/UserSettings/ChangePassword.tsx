@@ -15,6 +15,7 @@ import {
 import { LoadingButton } from "@/components/ui/loading-button"
 import { PasswordInput } from "@/components/ui/password-input"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { handleError } from "@/utils"
 
 const formSchema = z
@@ -39,6 +40,7 @@ const formSchema = z
 type FormData = z.infer<typeof formSchema>
 
 const ChangePassword = () => {
+logger.error('>>> Entering ChangePassword()', { "event.action": "ChangePassword" });
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -61,10 +63,14 @@ const ChangePassword = () => {
     onError: handleError.bind(showErrorToast),
   })
 
+logger.error(`ChangePassword(): mutation.id → ${mutation?.id}`, { "event.action": "ChangePassword" });
   const onSubmit = async (data: FormData) => {
+	logger.error(`>>> Entering onSubmit(data=${data})`, { "event.action": "onSubmit" });
     mutation.mutate(data)
+	logger.warn(`<<< Exiting onSubmit(data=${data})`, { "event.action": "onSubmit" });
   }
 
+logger.warn('<<< Exiting ChangePassword()', { "event.action": "ChangePassword" });
   return (
     <div className="max-w-md">
       <h3 className="text-lg font-semibold py-4">Change Password</h3>

@@ -1,4 +1,5 @@
 import * as React from "react"
+const logger = console;
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
@@ -35,6 +36,8 @@ function Alert({
 }
 
 function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering AlertTitle()', { "event.action": "AlertTitle" });
+logger.warn('<<< Exiting AlertTitle()', { "event.action": "AlertTitle" });
   return (
     <div
       data-slot="alert-title"

@@ -21,6 +21,8 @@ fileConfig(config.config_file_name)
 
 from app.models import SQLModel  # noqa
 from app.core.config import settings # noqa
+import logging
+logger = logging.getLogger(__name__)
 
 target_metadata = SQLModel.metadata
 
@@ -31,6 +33,8 @@ target_metadata = SQLModel.metadata
 
 
 def get_url():
+    logger.error(">>> Entering get_url()", extra={"event.action": "get_url"})
+    logger.warning("<<< Exiting get_url()", extra={"event.action": "get_url"})
     return str(settings.SQLALCHEMY_DATABASE_URI)
 
 
@@ -46,6 +50,7 @@ def run_migrations_offline():
     script output.
 
     """
+    logger.error(">>> Entering run_migrations_offline()", extra={"event.action": "run_migrations_offline"})
     url = get_url()
     context.configure(
         url=url, target_metadata=target_metadata, literal_binds=True, compare_type=True
@@ -53,6 +58,7 @@ def run_migrations_offline():
 
     with context.begin_transaction():
         context.run_migrations()
+        logger.warning("<<< Exiting run_migrations_offline()", extra={"event.action": "run_migrations_offline"})
 
 
 def run_migrations_online():
@@ -62,7 +68,9 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
+    logger.error(">>> Entering run_migrations_online()", extra={"event.action": "run_migrations_online"})
     configuration = config.get_section(config.config_ini_section)
+    logger.error("run_migrations_online(): configuration → %s", configuration, extra={"event.action": "run_migrations_online"})
     assert configuration is not None
     configuration["sqlalchemy.url"] = get_url()
     connectable = engine_from_config(
@@ -78,6 +86,7 @@ def run_migrations_online():
 
         with context.begin_transaction():
             context.run_migrations()
+            logger.warning("<<< Exiting run_migrations_online()", extra={"event.action": "run_migrations_online"})
 
 
 if context.is_offline_mode():

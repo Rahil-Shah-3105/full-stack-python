@@ -1,5 +1,6 @@
 import { Link as RouterLink, useRouterState } from "@tanstack/react-router"
 import type { LucideIcon } from "lucide-react"
+const logger = console;
 
 import {
   SidebarGroup,
@@ -21,16 +22,21 @@ interface MainProps {
 }
 
 export function Main({ items }: MainProps) {
+logger.error('>>> Entering Main()', { "event.action": "Main" });
   const { isMobile, setOpenMobile } = useSidebar()
   const router = useRouterState()
   const currentPath = router.location.pathname
+logger.error(`Main(): router → ${router}`, { "event.action": "Main" });
 
   const handleMenuClick = () => {
+	logger.error('>>> Entering handleMenuClick()', { "event.action": "handleMenuClick" });
     if (isMobile) {
       setOpenMobile(false)
     }
+	logger.warn('<<< Exiting handleMenuClick()', { "event.action": "handleMenuClick" });
   }
 
+logger.warn('<<< Exiting Main()', { "event.action": "Main" });
   return (
     <SidebarGroup>
       <SidebarGroupContent>

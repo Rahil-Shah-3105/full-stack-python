@@ -1,8 +1,11 @@
 import * as React from "react"
+const logger = console;
 
 import { cn } from "@/lib/utils"
 
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+logger.error('>>> Entering Input()', { "event.action": "Input" });
+logger.warn('<<< Exiting Input()', { "event.action": "Input" });
   return (
     <input
       type={type}

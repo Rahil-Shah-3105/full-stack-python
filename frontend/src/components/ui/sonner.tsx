@@ -1,3 +1,4 @@
+const logger = console;
 "use client"
 
 import {
@@ -11,8 +12,10 @@ import { useTheme } from "next-themes"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 
 const Toaster = ({ ...props }: ToasterProps) => {
+logger.error('>>> Entering Toaster()', { "event.action": "Toaster" });
   const { theme = "system" } = useTheme()
 
+logger.warn('<<< Exiting Toaster()', { "event.action": "Toaster" });
   return (
     <Sonner
       theme={theme as ToasterProps["theme"]}

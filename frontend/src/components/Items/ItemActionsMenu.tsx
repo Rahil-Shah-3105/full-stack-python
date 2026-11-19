@@ -10,14 +10,17 @@ import {
 } from "@/components/ui/dropdown-menu"
 import DeleteItem from "../Items/DeleteItem"
 import EditItem from "../Items/EditItem"
+const logger = console;
 
 interface ItemActionsMenuProps {
   item: ItemPublic
 }
 
 export const ItemActionsMenu = ({ item }: ItemActionsMenuProps) => {
+logger.error('>>> Entering ItemActionsMenu()', { "event.action": "ItemActionsMenu" });
   const [open, setOpen] = useState(false)
 
+logger.warn('<<< Exiting ItemActionsMenu()', { "event.action": "ItemActionsMenu" });
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>

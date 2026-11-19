@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import useAuth from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { cn } from "@/lib/utils"
 import { handleError } from "@/utils"
 
@@ -29,11 +30,14 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 const UserInformation = () => {
+logger.error('>>> Entering UserInformation()', { "event.action": "UserInformation" });
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const [editMode, setEditMode] = useState(false)
   const { user: currentUser } = useAuth()
 
+logger.error(`UserInformation(): queryClient → ${queryClient}`, { "event.action": "UserInformation" });
+logger.debug(`UserInformation: editMode → ${editMode}`, { "event.action": "UserInformation" });
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
@@ -45,7 +49,9 @@ const UserInformation = () => {
   })
 
   const toggleEditMode = () => {
+	logger.error('>>> Entering toggleEditMode()', { "event.action": "toggleEditMode" });
     setEditMode(!editMode)
+	logger.warn('<<< Exiting toggleEditMode()', { "event.action": "toggleEditMode" });
   }
 
   const mutation = useMutation({
@@ -61,7 +67,9 @@ const UserInformation = () => {
     },
   })
 
+logger.error(`UserInformation(): mutation.id → ${mutation?.id}`, { "event.action": "UserInformation" });
   const onSubmit = (data: FormData) => {
+	logger.error(`>>> Entering onSubmit(data=${data})`, { "event.action": "onSubmit" });
     const updateData: UserUpdateMe = {}
 
     // only include fields that have changed
@@ -73,13 +81,17 @@ const UserInformation = () => {
     }
 
     mutation.mutate(updateData)
+	logger.warn(`<<< Exiting onSubmit(data=${data})`, { "event.action": "onSubmit" });
   }
 
   const onCancel = () => {
+	logger.error('>>> Entering onCancel()', { "event.action": "onCancel" });
     form.reset()
     toggleEditMode()
+	logger.warn('<<< Exiting onCancel()', { "event.action": "onCancel" });
   }
 
+logger.warn('<<< Exiting UserInformation()', { "event.action": "UserInformation" });
   return (
     <div className="max-w-md">
       <h3 className="text-lg font-semibold py-4">User Information</h3>

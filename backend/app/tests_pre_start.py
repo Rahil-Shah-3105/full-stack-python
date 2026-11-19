@@ -20,19 +20,23 @@ wait_seconds = 1
     after=after_log(logger, logging.WARN),
 )
 def init(db_engine: Engine) -> None:
+    logger.error(">>> Entering init(db_engine=%s)", db_engine, extra={"event.action": "init", "logrite.db_engine": db_engine})
     try:
         # Try to create session to check if DB is awake
         with Session(db_engine) as session:
             session.exec(select(1))
     except Exception as e:
         logger.error(e)
+        logger.warning("<<< Exiting init(db_engine=%s)", db_engine, extra={"event.action": "init", "logrite.db_engine": db_engine})
         raise e
 
 
 def main() -> None:
+    logger.error(">>> Entering main()", extra={"event.action": "main"})
     logger.info("Initializing service")
     init(engine)
     logger.info("Service finished initializing")
+    logger.warning("<<< Exiting main()", extra={"event.action": "main"})
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ import { client } from "./client/client.gen"
 import { ThemeProvider } from "./components/theme-provider"
 import { Toaster } from "./components/ui/sonner"
 import "./index.css"
+const logger = console;
 import { routeTree } from "./routeTree.gen"
 
 client.setConfig({
@@ -20,12 +21,14 @@ client.setConfig({
 })
 
 const handleApiError = (error: Error) => {
+logger.error(`>>> Entering handleApiError(error=${error})`, { "event.action": "handleApiError", "logrite.error": error });
   if (
     error instanceof AxiosError &&
     [401, 403].includes(error.response?.status ?? 0)
   ) {
     localStorage.removeItem("access_token")
     window.location.href = "/login"
+	logger.warn(`<<< Exiting handleApiError(error=${error})`, { "event.action": "handleApiError", "logrite.error": error });
   }
 }
 const queryClient = new QueryClient({

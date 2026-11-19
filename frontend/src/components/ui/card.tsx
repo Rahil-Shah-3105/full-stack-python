@@ -1,8 +1,11 @@
 import * as React from "react"
+const logger = console;
 
 import { cn } from "@/lib/utils"
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering Card()', { "event.action": "Card" });
+logger.warn('<<< Exiting Card()', { "event.action": "Card" });
   return (
     <div
       data-slot="card"
@@ -16,6 +19,8 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering CardHeader()', { "event.action": "CardHeader" });
+logger.warn('<<< Exiting CardHeader()', { "event.action": "CardHeader" });
   return (
     <div
       data-slot="card-header"
@@ -29,6 +34,8 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering CardTitle()', { "event.action": "CardTitle" });
+logger.warn('<<< Exiting CardTitle()', { "event.action": "CardTitle" });
   return (
     <div
       data-slot="card-title"
@@ -39,6 +46,8 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering CardDescription()', { "event.action": "CardDescription" });
+logger.warn('<<< Exiting CardDescription()', { "event.action": "CardDescription" });
   return (
     <div
       data-slot="card-description"
@@ -49,6 +58,8 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering CardAction()', { "event.action": "CardAction" });
+logger.warn('<<< Exiting CardAction()', { "event.action": "CardAction" });
   return (
     <div
       data-slot="card-action"
@@ -62,6 +73,8 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering CardContent()', { "event.action": "CardContent" });
+logger.warn('<<< Exiting CardContent()', { "event.action": "CardContent" });
   return (
     <div
       data-slot="card-content"
@@ -72,6 +85,8 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering CardFooter()', { "event.action": "CardFooter" });
+logger.warn('<<< Exiting CardFooter()', { "event.action": "CardFooter" });
   return (
     <div
       data-slot="card-footer"

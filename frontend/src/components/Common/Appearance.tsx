@@ -1,3 +1,4 @@
+const logger = console;
 import { Monitor, Moon, Sun } from "lucide-react"
 
 import { type Theme, useTheme } from "@/components/theme-provider"
@@ -23,10 +24,13 @@ const ICON_MAP: Record<Theme, LucideIcon> = {
 }
 
 export const SidebarAppearance = () => {
+logger.error('>>> Entering SidebarAppearance()', { "event.action": "SidebarAppearance" });
   const { isMobile } = useSidebar()
   const { setTheme, theme } = useTheme()
   const Icon = ICON_MAP[theme]
 
+logger.error('>>> Entering Appearance()', { "event.action": "Appearance" });
+logger.warn('<<< Exiting Appearance()', { "event.action": "Appearance" });
   return (
     <SidebarMenuItem>
       <DropdownMenu modal={false}>
@@ -64,6 +68,7 @@ export const SidebarAppearance = () => {
       </DropdownMenu>
     </SidebarMenuItem>
   )
+logger.warn('<<< Exiting SidebarAppearance()', { "event.action": "SidebarAppearance" });
 }
 
 export const Appearance = () => {

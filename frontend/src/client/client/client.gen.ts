@@ -7,11 +7,14 @@ import { createSseClient } from '../core/serverSentEvents.gen';
 import type { HttpMethod } from '../core/types.gen';
 import { getValidRequestBody } from '../core/utils.gen';
 import type { Client, Config, RequestOptions } from './types.gen';
+const logger = console;
 import { buildUrl, createConfig, mergeConfigs, mergeHeaders, setAuthParams } from './utils.gen';
 
 export const createClient = (config: Config = {}): Client => {
+logger.error(`>>> Entering createClient(config=${config})`, { "event.action": "createClient", "logrite.config": config });
   let _config = mergeConfigs(createConfig(), config);
 
+logger.error(`createClient(config=${config}): _config → ${_config}`, { "event.action": "createClient", "logrite.config": config });
   let instance: AxiosInstance;
 
   if (_config.axios && !('Axios' in _config.axios)) {
@@ -25,6 +28,7 @@ export const createClient = (config: Config = {}): Client => {
   const getConfig = (): Config => ({ ..._config });
 
   const setConfig = (config: Config): Config => {
+	logger.error(`>>> Entering setConfig(config=${config})`, { "event.action": "setConfig", "logrite.config": config });
     _config = mergeConfigs(_config, config);
     instance.defaults = {
       ...instance.defaults,
@@ -32,6 +36,7 @@ export const createClient = (config: Config = {}): Client => {
       // @ts-expect-error
       headers: mergeHeaders(instance.defaults.headers, _config.headers),
     };
+	logger.warn(`<<< Exiting setConfig(config=${config})`, { "event.action": "setConfig", "logrite.config": config });
     return getConfig();
   };
 
@@ -68,6 +73,7 @@ export const createClient = (config: Config = {}): Client => {
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
+	logger.error(`>>> Entering request(options=${options})`, { "event.action": "request", "logrite.options": options });
     const { opts, url } = await beforeRequest(options);
     try {
       // assign Axios here for consistency with fetch
@@ -84,6 +90,7 @@ export const createClient = (config: Config = {}): Client => {
         url,
       });
 
+	logger.error(`request(options=${options}): response → ${response}`, { "event.action": "request", "logrite.options": options });
       let { data } = response;
 
       if (opts.responseType === 'json') {
@@ -93,6 +100,7 @@ export const createClient = (config: Config = {}): Client => {
 
         if (opts.responseTransformer) {
           data = await opts.responseTransformer(data);
+		logger.error(`request(options=${options}): data → ${data}`, { "event.action": "request", "logrite.options": options });
         }
       }
 
@@ -101,12 +109,15 @@ export const createClient = (config: Config = {}): Client => {
         data: data ?? {},
       };
     } catch (error) {
+	logger.error(`Exception in createClient(config=${config}): ${(error as Error).message}`, error, { "event.action": "createClient", "event.category": "process", "logrite.config": config });
       const e = error as AxiosError;
+	logger.error(`Exception in request(options=${options}): ${(error as Error).message}`, error, { "event.action": "request", "event.category": "process", "logrite.options": options });
       if (opts.throwOnError) {
         throw e;
       }
       // @ts-expect-error
       e.error = e.response?.data ?? {};
+	logger.debug(`request(options=${options}): e.error → ${e.error}`, { "event.action": "request", "logrite.options": options });
       return e;
     }
   };
@@ -115,6 +126,7 @@ export const createClient = (config: Config = {}): Client => {
     request({ ...options, method });
 
   const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
+	logger.error(`>>> Entering makeSseFn(method=${method})`, { "event.action": "makeSseFn", "logrite.method": method });
     const { opts, url } = await beforeRequest(options);
     return createSseClient({
       ...opts,
@@ -131,6 +143,7 @@ export const createClient = (config: Config = {}): Client => {
   const _buildUrl: Client['buildUrl'] = (options) =>
     buildUrl({ axios: instance, ..._config, ...options });
 
+logger.warn(`<<< Exiting createClient(config=${config})`, { "event.action": "createClient", "logrite.config": config });
   return {
     buildUrl: _buildUrl,
     connect: makeMethodFn('CONNECT'),

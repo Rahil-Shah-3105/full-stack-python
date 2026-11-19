@@ -9,6 +9,9 @@ from alembic import op
 import sqlalchemy as sa
 import sqlmodel.sql.sqltypes
 from sqlalchemy.dialects import postgresql
+import time
+import logging
+logger = logging.getLogger(__name__)
 
 
 # revision identifiers, used by Alembic.
@@ -19,6 +22,7 @@ depends_on = None
 
 
 def upgrade():
+    logger.error(">>> Entering upgrade()", extra={"event.action": "upgrade"})
     # Ensure uuid-ossp extension is available
     op.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
 
@@ -27,8 +31,10 @@ def upgrade():
     op.add_column('item', sa.Column('new_id', postgresql.UUID(as_uuid=True), default=sa.text('uuid_generate_v4()')))
     op.add_column('item', sa.Column('new_owner_id', postgresql.UUID(as_uuid=True), nullable=True))
 
+    __log_start = time.time()
     # Populate the new columns with UUIDs
     op.execute('UPDATE "user" SET new_id = uuid_generate_v4()')
+    logger.error("upgrade()=: update operation took %s ms", int((time.time() - __log_start) * 1000), extra={"event.action": "upgrade", "event.category": "database"})
     op.execute('UPDATE item SET new_id = uuid_generate_v4()')
     op.execute('UPDATE item SET new_owner_id = (SELECT new_id FROM "user" WHERE "user".id = item.owner_id)')
 
@@ -53,8 +59,10 @@ def upgrade():
 
     # Recreate foreign key constraint
     op.create_foreign_key('item_owner_id_fkey', 'item', 'user', ['owner_id'], ['id'])
+    logger.warning("<<< Exiting upgrade()", extra={"event.action": "upgrade"})
 
 def downgrade():
+    logger.error(">>> Entering downgrade()", extra={"event.action": "downgrade"})
     # Reverse the upgrade process
     op.add_column('user', sa.Column('old_id', sa.Integer, autoincrement=True))
     op.add_column('item', sa.Column('old_id', sa.Integer, autoincrement=True))
@@ -87,4 +95,5 @@ def downgrade():
     op.create_primary_key('item_pkey', 'item', ['id'])
 
     # Recreate foreign key constraint
+    logger.warning("<<< Exiting downgrade()", extra={"event.action": "downgrade"})
     op.create_foreign_key('item_owner_id_fkey', 'item', 'user', ['owner_id'], ['id'])

@@ -9,12 +9,14 @@ import {
 } from '../core/pathSerializer.gen';
 import { getUrl } from '../core/utils.gen';
 import type { Client, ClientOptions, Config, RequestOptions } from './types.gen';
+const logger = console;
 
 export const createQuerySerializer = <T = unknown>({
   parameters = {},
   ...args
 }: QuerySerializerOptions = {}) => {
   const querySerializer = (queryParams: T) => {
+	logger.error(`>>> Entering querySerializer(queryParams=${queryParams})`, { "event.action": "querySerializer", "logrite.queryParams": queryParams });
     const search: string[] = [];
     if (queryParams && typeof queryParams === 'object') {
       for (const name in queryParams) {
@@ -56,6 +58,7 @@ export const createQuerySerializer = <T = unknown>({
         }
       }
     }
+	logger.warn(`<<< Exiting querySerializer(queryParams=${queryParams})`, { "event.action": "querySerializer", "logrite.queryParams": queryParams });
     return search.join('&');
   };
   return querySerializer;
@@ -67,6 +70,7 @@ const checkForExistence = (
   },
   name?: string,
 ): boolean => {
+logger.error(`>>> Entering checkForExistence(options=${options},name=${name})`, { "event.action": "checkForExistence", "logrite.options": options, "logrite.name": name });
   if (!name) {
     return false;
   }
@@ -80,6 +84,7 @@ const checkForExistence = (
   ) {
     return options.headers['Cookie'].includes(`${name}=`);
   }
+logger.warn(`<<< Exiting checkForExistence(options=${options},name=${name})`, { "event.action": "checkForExistence", "logrite.options": options, "logrite.name": name });
   return false;
 };
 
@@ -144,8 +149,11 @@ export const buildUrl: Client['buildUrl'] = (options) => {
 };
 
 export const mergeConfigs = (a: Config, b: Config): Config => {
+logger.error(`>>> Entering mergeConfigs(a=${a},b=${b})`, { "event.action": "mergeConfigs", "logrite.a": a, "logrite.b": b });
   const config = { ...a, ...b };
   config.headers = mergeHeaders(a.headers, b.headers);
+logger.error(`mergeConfigs(a=${a},b=${b}): config → ${config}`, { "event.action": "mergeConfigs", "logrite.a": a, "logrite.b": b });
+logger.warn(`<<< Exiting mergeConfigs(a=${a},b=${b})`, { "event.action": "mergeConfigs", "logrite.a": a, "logrite.b": b });
   return config;
 };
 
@@ -165,6 +173,7 @@ export const axiosHeadersKeywords = [
 export const mergeHeaders = (
   ...headers: Array<Required<Config>['headers'] | undefined>
 ): Record<any, unknown> => {
+logger.error(`>>> Entering mergeHeaders(headers=${headers})`, { "event.action": "mergeHeaders" });
   const mergedHeaders: Record<any, unknown> = {};
   for (const header of headers) {
     if (!header || typeof header !== 'object') {
@@ -172,6 +181,7 @@ export const mergeHeaders = (
     }
 
     const iterator = Object.entries(header);
+	logger.error(`mergeHeaders(headers=${headers}): iterator → ${iterator}`, { "event.action": "mergeHeaders" });
 
     for (const [key, value] of iterator) {
       if (
@@ -196,6 +206,7 @@ export const mergeHeaders = (
       }
     }
   }
+logger.warn(`<<< Exiting mergeHeaders(headers=${headers})`, { "event.action": "mergeHeaders" });
   return mergedHeaders;
 };
 

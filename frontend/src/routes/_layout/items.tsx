@@ -8,13 +8,16 @@ import { DataTable } from "@/components/Common/DataTable"
 import AddItem from "@/components/Items/AddItem"
 import { columns } from "@/components/Items/columns"
 import PendingItems from "@/components/Pending/PendingItems"
+const logger = console;
 
 function getItemsQueryOptions() {
+logger.error('>>> Entering getItemsQueryOptions()', { "event.action": "getItemsQueryOptions" });
   return {
     queryFn: async () =>
       (await ItemsService.readItems({ query: { skip: 0, limit: 100 } })).data,
     queryKey: ["items"],
   }
+logger.warn('<<< Exiting getItemsQueryOptions()', { "event.action": "getItemsQueryOptions" });
 }
 
 export const Route = createFileRoute("/_layout/items")({
@@ -29,6 +32,7 @@ export const Route = createFileRoute("/_layout/items")({
 })
 
 function ItemsTableContent() {
+logger.error('>>> Entering ItemsTableContent()', { "event.action": "ItemsTableContent" });
   const { data: items } = useSuspenseQuery(getItemsQueryOptions())
 
   if (items.data.length === 0) {
@@ -43,10 +47,13 @@ function ItemsTableContent() {
     )
   }
 
+logger.warn('<<< Exiting ItemsTableContent()', { "event.action": "ItemsTableContent" });
   return <DataTable columns={columns} data={items.data} />
 }
 
 function ItemsTable() {
+logger.error('>>> Entering ItemsTable()', { "event.action": "ItemsTable" });
+logger.warn('<<< Exiting ItemsTable()', { "event.action": "ItemsTable" });
   return (
     <Suspense fallback={<PendingItems />}>
       <ItemsTableContent />
@@ -55,6 +62,8 @@ function ItemsTable() {
 }
 
 function Items() {
+logger.error('>>> Entering Items()', { "event.action": "Items" });
+logger.warn('<<< Exiting Items()', { "event.action": "Items" });
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">

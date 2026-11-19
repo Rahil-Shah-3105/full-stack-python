@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import { PasswordInput } from "@/components/ui/password-input"
 import useAuth, { isLoggedIn } from "@/hooks/useAuth"
+const logger = console;
 
 const formSchema = z.object({
   username: z.email({ message: "Invalid email address" }),
@@ -51,6 +52,7 @@ export const Route = createFileRoute("/login")({
 })
 
 function Login() {
+logger.error('>>> Entering Login()', { "event.action": "Login" });
   const { loginMutation } = useAuth()
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -63,10 +65,13 @@ function Login() {
   })
 
   const onSubmit = (data: FormData) => {
+	logger.error(`>>> Entering onSubmit(data=${data})`, { "event.action": "onSubmit" });
     if (loginMutation.isPending) return
     loginMutation.mutate(data)
+	logger.warn(`<<< Exiting onSubmit(data=${data})`, { "event.action": "onSubmit" });
   }
 
+logger.warn('<<< Exiting Login()', { "event.action": "Login" });
   return (
     <AuthLayout>
       <Form {...form}>

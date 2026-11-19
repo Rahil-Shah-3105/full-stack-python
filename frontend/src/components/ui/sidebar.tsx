@@ -2,6 +2,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
 import * as React from "react"
+const logger = console;
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -43,11 +44,14 @@ type SidebarContextProps = {
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
 
 function useSidebar() {
+logger.error('>>> Entering useSidebar()', { "event.action": "useSidebar" });
   const context = React.useContext(SidebarContext)
   if (!context) {
+	logger.error(`useSidebar(): context.id → ${context?.id}`, { "event.action": "useSidebar" });
     throw new Error("useSidebar must be used within a SidebarProvider.")
   }
 
+logger.warn('<<< Exiting useSidebar()', { "event.action": "useSidebar" });
   return context
 }
 
@@ -68,6 +72,7 @@ function SidebarProvider({
   const [openMobile, setOpenMobile] = React.useState(false)
 
   const getInitialOpen = () => {
+	logger.error('>>> Entering getInitialOpen()', { "event.action": "getInitialOpen" });
     if (typeof document === "undefined") return defaultOpen
 
     const cookie = document.cookie
@@ -76,6 +81,7 @@ function SidebarProvider({
 
     if (!cookie) return defaultOpen
 
+	logger.warn('<<< Exiting getInitialOpen()', { "event.action": "getInitialOpen" });
     return cookie.split("=")[1] === "true"
   }
 
@@ -291,8 +297,10 @@ function SidebarTrigger({
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
+logger.error('>>> Entering SidebarRail()', { "event.action": "SidebarRail" });
   const { toggleSidebar } = useSidebar()
 
+logger.warn('<<< Exiting SidebarRail()', { "event.action": "SidebarRail" });
   return (
     <button
       data-sidebar="rail"
@@ -316,6 +324,8 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
 }
 
 function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
+logger.error('>>> Entering SidebarInset()', { "event.action": "SidebarInset" });
+logger.warn('<<< Exiting SidebarInset()', { "event.action": "SidebarInset" });
   return (
     <main
       data-slot="sidebar-inset"
@@ -344,6 +354,8 @@ function SidebarInput({
 }
 
 function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering SidebarHeader()', { "event.action": "SidebarHeader" });
+logger.warn('<<< Exiting SidebarHeader()', { "event.action": "SidebarHeader" });
   return (
     <div
       data-slot="sidebar-header"
@@ -355,6 +367,8 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering SidebarFooter()', { "event.action": "SidebarFooter" });
+logger.warn('<<< Exiting SidebarFooter()', { "event.action": "SidebarFooter" });
   return (
     <div
       data-slot="sidebar-footer"
@@ -380,6 +394,8 @@ function SidebarSeparator({
 }
 
 function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering SidebarContent()', { "event.action": "SidebarContent" });
+logger.warn('<<< Exiting SidebarContent()', { "event.action": "SidebarContent" });
   return (
     <div
       data-slot="sidebar-content"
@@ -394,6 +410,8 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function SidebarGroup({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering SidebarGroup()', { "event.action": "SidebarGroup" });
+logger.warn('<<< Exiting SidebarGroup()', { "event.action": "SidebarGroup" });
   return (
     <div
       data-slot="sidebar-group"
@@ -463,6 +481,8 @@ function SidebarGroupContent({
 }
 
 function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
+logger.error('>>> Entering SidebarMenu()', { "event.action": "SidebarMenu" });
+logger.warn('<<< Exiting SidebarMenu()', { "event.action": "SidebarMenu" });
   return (
     <ul
       data-slot="sidebar-menu"
@@ -474,6 +494,8 @@ function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
 }
 
 function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
+logger.error('>>> Entering SidebarMenuItem()', { "event.action": "SidebarMenuItem" });
+logger.warn('<<< Exiting SidebarMenuItem()', { "event.action": "SidebarMenuItem" });
   return (
     <li
       data-slot="sidebar-menu-item"
@@ -649,6 +671,8 @@ function SidebarMenuSkeleton({
 }
 
 function SidebarMenuSub({ className, ...props }: React.ComponentProps<"ul">) {
+logger.error('>>> Entering SidebarMenuSub()', { "event.action": "SidebarMenuSub" });
+logger.warn('<<< Exiting SidebarMenuSub()', { "event.action": "SidebarMenuSub" });
   return (
     <ul
       data-slot="sidebar-menu-sub"

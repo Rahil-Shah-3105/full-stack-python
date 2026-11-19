@@ -8,6 +8,8 @@ Create Date: 2024-06-17 14:42:44.639457
 from alembic import op
 import sqlalchemy as sa
 import sqlmodel.sql.sqltypes
+import logging
+logger = logging.getLogger(__name__)
 
 
 # revision identifiers, used by Alembic.
@@ -18,6 +20,7 @@ depends_on = None
 
 
 def upgrade():
+    logger.error(">>> Entering upgrade()", extra={"event.action": "upgrade"})
     # Adjust the length of the email field in the User table
     op.alter_column('user', 'email',
                existing_type=sa.String(),
@@ -37,6 +40,7 @@ def upgrade():
                existing_nullable=False)
 
     # Adjust the length of the description field in the Item table
+    logger.warning("<<< Exiting upgrade()", extra={"event.action": "upgrade"})
     op.alter_column('item', 'description',
                existing_type=sa.String(),
                type_=sa.String(length=255),
@@ -44,6 +48,7 @@ def upgrade():
 
 
 def downgrade():
+    logger.error(">>> Entering downgrade()", extra={"event.action": "downgrade"})
     # Revert the length of the email field in the User table
     op.alter_column('user', 'email',
                existing_type=sa.String(length=255),
@@ -63,6 +68,7 @@ def downgrade():
                existing_nullable=False)
 
     # Revert the length of the description field in the Item table
+    logger.warning("<<< Exiting downgrade()", extra={"event.action": "downgrade"})
     op.alter_column('item', 'description',
                existing_type=sa.String(length=255),
                type_=sa.String(),

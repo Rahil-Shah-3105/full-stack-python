@@ -1,8 +1,11 @@
 import * as React from "react"
+const logger = console;
 
 import { cn } from "@/lib/utils"
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
+logger.error('>>> Entering Table()', { "event.action": "Table" });
+logger.warn('<<< Exiting Table()', { "event.action": "Table" });
   return (
     <div
       data-slot="table-container"
@@ -18,6 +21,8 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
 }
 
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
+logger.error('>>> Entering TableHeader()', { "event.action": "TableHeader" });
+logger.warn('<<< Exiting TableHeader()', { "event.action": "TableHeader" });
   return (
     <thead
       data-slot="table-header"
@@ -28,6 +33,8 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
 }
 
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
+logger.error('>>> Entering TableBody()', { "event.action": "TableBody" });
+logger.warn('<<< Exiting TableBody()', { "event.action": "TableBody" });
   return (
     <tbody
       data-slot="table-body"
@@ -38,6 +45,8 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
 }
 
 function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
+logger.error('>>> Entering TableFooter()', { "event.action": "TableFooter" });
+logger.warn('<<< Exiting TableFooter()', { "event.action": "TableFooter" });
   return (
     <tfoot
       data-slot="table-footer"
@@ -51,6 +60,8 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
 }
 
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
+logger.error('>>> Entering TableRow()', { "event.action": "TableRow" });
+logger.warn('<<< Exiting TableRow()', { "event.action": "TableRow" });
   return (
     <tr
       data-slot="table-row"
@@ -64,6 +75,8 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
 }
 
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+logger.error('>>> Entering TableHead()', { "event.action": "TableHead" });
+logger.warn('<<< Exiting TableHead()', { "event.action": "TableHead" });
   return (
     <th
       data-slot="table-head"
@@ -77,6 +90,8 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
 }
 
 function TableCell({ className, ...props }: React.ComponentProps<"td">) {
+logger.error('>>> Entering TableCell()', { "event.action": "TableCell" });
+logger.warn('<<< Exiting TableCell()', { "event.action": "TableCell" });
   return (
     <td
       data-slot="table-cell"

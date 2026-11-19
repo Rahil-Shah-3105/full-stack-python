@@ -29,6 +29,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { handleError } from "@/utils"
 
 const formSchema = z
@@ -53,10 +54,12 @@ const formSchema = z
 type FormData = z.infer<typeof formSchema>
 
 const AddUser = () => {
+logger.error('>>> Entering AddUser()', { "event.action": "AddUser" });
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
 
+logger.error(`AddUser(): queryClient → ${queryClient}`, { "event.action": "AddUser" });
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
@@ -80,14 +83,19 @@ const AddUser = () => {
     },
     onError: handleError.bind(showErrorToast),
     onSettled: () => {
+	logger.debug(`AddUser: isOpen → ${isOpen}`, { "event.action": "AddUser" });
       queryClient.invalidateQueries({ queryKey: ["users"] })
     },
   })
 
+logger.error(`AddUser(): mutation.id → ${mutation?.id}`, { "event.action": "AddUser" });
   const onSubmit = (data: FormData) => {
+	logger.error(`>>> Entering onSubmit(data=${data})`, { "event.action": "onSubmit" });
     mutation.mutate(data)
+	logger.warn(`<<< Exiting onSubmit(data=${data})`, { "event.action": "onSubmit" });
   }
 
+logger.warn('<<< Exiting AddUser()', { "event.action": "AddUser" });
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>

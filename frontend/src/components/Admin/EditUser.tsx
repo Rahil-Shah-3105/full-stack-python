@@ -29,6 +29,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { handleError } from "@/utils"
 
 const formSchema = z
@@ -57,10 +58,12 @@ interface EditUserProps {
 }
 
 const EditUser = ({ user, onSuccess }: EditUserProps) => {
+logger.error('>>> Entering EditUser()', { "event.action": "EditUser" });
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
 
+logger.error(`EditUser(): queryClient → ${queryClient}`, { "event.action": "EditUser" });
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
@@ -83,19 +86,24 @@ const EditUser = ({ user, onSuccess }: EditUserProps) => {
     },
     onError: handleError.bind(showErrorToast),
     onSettled: () => {
+	logger.debug(`EditUser: isOpen → ${isOpen}`, { "event.action": "EditUser" });
       queryClient.invalidateQueries({ queryKey: ["users"] })
     },
   })
 
+logger.error(`EditUser(): mutation.id → ${mutation?.id}`, { "event.action": "EditUser" });
   const onSubmit = (data: FormData) => {
+	logger.error(`>>> Entering onSubmit(data=${data})`, { "event.action": "onSubmit" });
     // exclude confirm_password from submission data and remove password if empty
     const { confirm_password: _, ...submitData } = data
     if (!submitData.password) {
       delete submitData.password
     }
     mutation.mutate(submitData)
+	logger.warn(`<<< Exiting onSubmit(data=${data})`, { "event.action": "onSubmit" });
   }
 
+logger.warn('<<< Exiting EditUser()', { "event.action": "EditUser" });
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuItem

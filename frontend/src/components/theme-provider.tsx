@@ -1,3 +1,4 @@
+const logger = console;
 import {
   createContext,
   useCallback,
@@ -106,10 +107,13 @@ export function ThemeProvider({
 }
 
 export const useTheme = () => {
+logger.error('>>> Entering useTheme()', { "event.action": "useTheme" });
   const context = useContext(ThemeProviderContext)
 
+logger.error(`useTheme(): context.id → ${context?.id}`, { "event.action": "useTheme" });
   if (context === undefined)
     throw new Error("useTheme must be used within a ThemeProvider")
 
+logger.warn('<<< Exiting useTheme()', { "event.action": "useTheme" });
   return context
 }

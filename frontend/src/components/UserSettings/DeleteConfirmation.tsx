@@ -16,14 +16,17 @@ import {
 import { LoadingButton } from "@/components/ui/loading-button"
 import useAuth from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
+const logger = console;
 import { handleError } from "@/utils"
 
 const DeleteConfirmation = () => {
+logger.error('>>> Entering DeleteConfirmation()', { "event.action": "DeleteConfirmation" });
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { handleSubmit } = useForm()
   const { logout } = useAuth()
 
+logger.error(`DeleteConfirmation(): queryClient → ${queryClient}`, { "event.action": "DeleteConfirmation" });
   const mutation = useMutation({
     mutationFn: () => UsersService.deleteUserMe(),
     onSuccess: () => {
@@ -36,10 +39,14 @@ const DeleteConfirmation = () => {
     },
   })
 
+logger.error(`DeleteConfirmation(): mutation.id → ${mutation?.id}`, { "event.action": "DeleteConfirmation" });
   const onSubmit = async () => {
+	logger.error('>>> Entering onSubmit()', { "event.action": "onSubmit" });
     mutation.mutate()
+	logger.warn('<<< Exiting onSubmit()', { "event.action": "onSubmit" });
   }
 
+logger.warn('<<< Exiting DeleteConfirmation()', { "event.action": "DeleteConfirmation" });
   return (
     <Dialog>
       <DialogTrigger asChild>

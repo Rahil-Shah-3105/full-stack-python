@@ -1,3 +1,4 @@
+const logger = console;
 import { FaGithub, FaLinkedinIn } from "react-icons/fa"
 import { FaXTwitter } from "react-icons/fa6"
 
@@ -16,8 +17,11 @@ const socialLinks = [
 ]
 
 export function Footer() {
+logger.error('>>> Entering Footer()', { "event.action": "Footer" });
   const currentYear = new Date().getFullYear()
 
+logger.error(`Footer(): currentYear → ${currentYear}`, { "event.action": "Footer" });
+logger.warn('<<< Exiting Footer()', { "event.action": "Footer" });
   return (
     <footer className="border-t py-4 px-6">
       <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">

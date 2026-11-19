@@ -2,11 +2,14 @@
 
 import * as React from "react"
 import * as SheetPrimitive from "@radix-ui/react-dialog"
+const logger = console;
 import { XIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
+logger.error('>>> Entering Sheet()', { "event.action": "Sheet" });
+logger.warn('<<< Exiting Sheet()', { "event.action": "Sheet" });
   return <SheetPrimitive.Root data-slot="sheet" {...props} />
 }
 
@@ -82,6 +85,8 @@ function SheetContent({
 }
 
 function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering SheetHeader()', { "event.action": "SheetHeader" });
+logger.warn('<<< Exiting SheetHeader()', { "event.action": "SheetHeader" });
   return (
     <div
       data-slot="sheet-header"
@@ -92,6 +97,8 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
+logger.error('>>> Entering SheetFooter()', { "event.action": "SheetFooter" });
+logger.warn('<<< Exiting SheetFooter()', { "event.action": "SheetFooter" });
   return (
     <div
       data-slot="sheet-footer"
